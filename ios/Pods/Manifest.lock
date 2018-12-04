@@ -1,0 +1,95 @@
+PODS:
+  - Firebase (5.4.1):
+    - Firebase/Core (= 5.4.1)
+  - Firebase/Core (5.4.1):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 5.0.1)
+  - Firebase/CoreOnly (5.4.1):
+    - FirebaseCore (= 5.0.6)
+  - Firebase/Messaging (5.4.1):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (= 3.0.3)
+  - FirebaseAnalytics (5.0.1):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - nanopb (~> 0.3)
+  - FirebaseCore (5.0.6):
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - FirebaseInstanceID (3.1.1):
+    - FirebaseCore (~> 5.0)
+  - FirebaseMessaging (3.0.3):
+    - FirebaseCore (~> 5.0)
+    - FirebaseInstanceID (~> 3.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - Protobuf (~> 3.1)
+  - Google/Analytics (2.0.4):
+    - Google/Core
+    - GoogleAnalytics (~> 3.12)
+  - Google/Core (2.0.4):
+    - GoogleInterchangeUtilities (~> 1.0)
+    - GoogleNetworkingUtilities (~> 1.0)
+    - GoogleSymbolUtilities (~> 1.0)
+    - GoogleUtilities (~> 1.1)
+  - GoogleAnalytics (3.17.0)
+  - GoogleInterchangeUtilities (1.2.2):
+    - GoogleSymbolUtilities (~> 1.1)
+  - GoogleNetworkingUtilities (1.2.2):
+    - GoogleSymbolUtilities (~> 1.1)
+  - GoogleSymbolUtilities (1.1.2)
+  - GoogleToolboxForMac/Defines (2.1.4)
+  - GoogleToolboxForMac/Logger (2.1.4):
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - "GoogleToolboxForMac/NSData+zlib (2.1.4)":
+    - GoogleToolboxForMac/Defines (= 2.1.4)
+  - GoogleUtilities (1.3.2):
+    - GoogleSymbolUtilities (~> 1.1)
+  - nanopb (0.3.8):
+    - nanopb/decode (= 0.3.8)
+    - nanopb/encode (= 0.3.8)
+  - nanopb/decode (0.3.8)
+  - nanopb/encode (0.3.8)
+  - Protobuf (3.6.1)
+
+DEPENDENCIES:
+  - Firebase
+  - Firebase/Core
+  - Firebase/Messaging
+  - Google/Analytics (~> 2.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseInstanceID
+    - FirebaseMessaging
+    - Google
+    - GoogleAnalytics
+    - GoogleInterchangeUtilities
+    - GoogleNetworkingUtilities
+    - GoogleSymbolUtilities
+    - GoogleToolboxForMac
+    - GoogleUtilities
+    - nanopb
+    - Protobuf
+
+SPEC CHECKSUMS:
+  Firebase: 355bd535bfdacaa82a7fe8d9784115edefd6fc03
+  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
+  FirebaseCore: 4c28e3b9708ba48a765e76515f913a71596eb5dd
+  FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
+  FirebaseMessaging: f43eb0c0e1da096e659de6f713038e74862a62cd
+  Google: d536877ec602555b755cc28ce6fed104825c693c
+  GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
+  GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
+  GoogleNetworkingUtilities: 3edd3a8161347494f2da60ea0deddc8a472d94cb
+  GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
+  GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
+  GoogleUtilities: 8bbc733218aad26306f9d4a253823986110e3358
+  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
+
+PODFILE CHECKSUM: 5e2a9b613aa8e4581745422e3c7f8a2fdd3fad3e
+
+COCOAPODS: 1.5.3

@@ -1,0 +1,33 @@
+ var data= [
+        {
+            "iconType": "image",
+            "icon": [
+                "aaaaaa"
+            ]
+        },
+        {
+            "iconType": "image",
+            "icon": [
+                "bbbbbbbb"
+            ],
+        },
+ {
+            "iconType": "video",
+            "icon": [
+                "ccccccc"
+            ],
+        }
+    ]
+
+
+let b=[],c=[]
+data.forEach(function(entry) {
+    c=[].push(entry.icon[0])
+   if(entry.iconType=="image){
+       b.push({
+           iconType:"image",
+           icon:c
+       })
+   }
+   c=[]
+});

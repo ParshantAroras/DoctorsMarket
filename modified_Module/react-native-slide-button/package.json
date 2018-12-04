@@ -1,0 +1,60 @@
+{
+  "_from": "react-native-slide-button@^1.2.1",
+  "_id": "react-native-slide-button@1.2.1",
+  "_inBundle": false,
+  "_integrity": "sha1-dVah0bcGmWRj96z3DM9amAl8FiI=",
+  "_location": "/react-native-slide-button",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "react-native-slide-button@^1.2.1",
+    "name": "react-native-slide-button",
+    "escapedName": "react-native-slide-button",
+    "rawSpec": "^1.2.1",
+    "saveSpec": null,
+    "fetchSpec": "^1.2.1"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-slide-button/-/react-native-slide-button-1.2.1.tgz",
+  "_shasum": "7556a1d1b706996463f7acf70ccf5a98097c1622",
+  "_spec": "react-native-slide-button@^1.2.1",
+  "_where": "/Users/parshant.nagpal/Documents/Parshant Nagpal/Projects/React-native/React-Navigation/doctorsmarket",
+  "author": {
+    "name": "Sreejith R"
+  },
+  "bugs": {
+    "url": "https://github.com/sreejithr/react-native-slide-button/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Slide to proceed button for React Native",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "SlideButton.js",
+    "package.json"
+  ],
+  "homepage": "https://github.com/sreejithr/react-native-slide-button#readme",
+  "keywords": [
+    "react-native",
+    "react",
+    "slide",
+    "swipe",
+    "button"
+  ],
+  "license": "MIT",
+  "main": "SlideButton.js",
+  "name": "react-native-slide-button",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sreejithr/react-native-slide-button.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.2.1"
+}

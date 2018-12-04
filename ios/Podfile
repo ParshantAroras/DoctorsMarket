@@ -1,0 +1,28 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'DoctorsMarket' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  #use_frameworks!
+
+  # Pods for DoctorsMarket
+  pod 'Firebase'
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
+  pod 'Google/Analytics', '~> 2.0'
+  target 'DoctorsMarket-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'DoctorsMarketTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
+
+target 'DoctorsMarket-tvOS' do
+ 
+
+end
