@@ -2424,7 +2424,7 @@ class EditStructureprofile extends Component {
 							</ScrollView>
 						</View>
 					</Modal>
-				)}	</View>
+				)}</View>
 		);
 	}
 }
