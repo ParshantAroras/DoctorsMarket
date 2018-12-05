@@ -37,6 +37,7 @@ import DocumentUploader from '../../components/documentuploader';
 import Accordion from '../../components/accordian';
 import workingcountries from '../../utils/workingcountries';
 import { Toast } from 'native-base';
+import Events from '../../utils/Events';
 
 const items = [
 	{
@@ -93,8 +94,25 @@ class Professional extends Component {
 			right_to_work_in_uk,
 			country: country ? country : [],
 			certificates,
-			prof_reg_cert_Again: {}
+			prof_reg_cert_Again: {},
+			disable : true
 		};
+	}	
+	
+	componentDidMount(){
+		Events.on('backButtonPage', this.backButtonPage);
+		Events.on('editButtonPage', this.editButtonPage);
+
+	}
+	componentWillUnmount(){
+		Events.removeListener('backButtonPage', this.backButtonPage);
+		Events.removeListener('editButtonPage', this.editButtonPage);
+	}
+	backButtonPage=(data)=>{
+		this.props.navigation.pop();
+	}
+	editButtonPage=(data)=>{
+		this.setState({disable: false})
 	}
 
 	_requestPermission = () => {
@@ -181,6 +199,17 @@ class Professional extends Component {
 				});
 				return;
 			}
+		 }
+		 ;
+		 if (!right_to_work_in_uk && selectedItems2.length === 0) {
+			 //	alert('lpp');
+			 this.setState({ countrytoworkerror: 'Select Countries you prefer to work' });
+			 Toast.show({
+				 text: 'Select Countries you prefer to work',
+				 buttonText: 'Okay',
+				 type: 'danger',
+			 });
+			 return;
 		 }
 		}
 
@@ -398,6 +427,7 @@ class Professional extends Component {
 			navigation: { navigate },
 			SignupUpdate,
 		} = this.props;
+		let {disable} = this.state;
 		let { is_gmc, certificates, prof_reg_cert } = this.state;
 		console.log(this.state.doc1, this.state.doc2);
 
@@ -425,6 +455,7 @@ class Professional extends Component {
 							showDropDowns={true}
 							expandDropDowns={true}
 							readOnlyHeadings={true}
+							disabledItem={disable}
 							onSelectedItemsChange={this.onSelectedItemsChange}
 							selectedItems={this.state.selectedItems}
 							styles={{
@@ -465,11 +496,21 @@ class Professional extends Component {
 								},
 							}}
 						/>
+						<Text
+							style={{
+								color: 'rgb(213, 0, 0)',
+								fontSize: 12,
+								marginVertical: verticalScale(2),
+							}}
+						>
+							{this.state.specialityerror}
+						</Text>
 						<Dropdown
 							error={this.state.gradeerror}
 							label={'Update your Grade?'}
 							data={doctorgrade}
 							fontSize={15}
+							disabled={disable}
 							pickerStyle={{
 								borderWidth: 1,
 								borderColor: '#666666',
@@ -517,12 +558,12 @@ class Professional extends Component {
 							>
 								<Genderfield
 									selected={this.state.is_gmc === 1}
-									onPress={() => this.setState({ is_gmc: 0 })}
+									onPress={() => {!disable && this.setState({ is_gmc: 1 })}}
 									label="Yes"
 								/>
 								<Genderfield
 									selected={this.state.is_gmc === 0}
-									onPress={() => this.setState({ is_gmc: 1 })}
+									onPress={() => {!disable && this.setState({ is_gmc: 0 })}}
 									label="No"
 								/>
 							</View>
@@ -544,6 +585,7 @@ class Professional extends Component {
 									defaultValue={''}
 									keyboardType="default"
 									autoCapitalize="none"
+									disabled={disable}
 									autoCorrect={false}
 									enablesReturnKeyAutomatically={true}
 									onFocus={this.onFocus}
@@ -551,7 +593,7 @@ class Professional extends Component {
 									onSubmitEditing={() => Keyboard.dismiss()}
 									returnKeyType="next"
 									label="Enter your GMC number"
-									error={this.state.gmcerror}
+									error={this.state.gmcnumbererror}
 									tintColor={'#02B2FE'}
 								/>
 
@@ -577,6 +619,7 @@ class Professional extends Component {
 										keyboardType="default"
 										autoCapitalize="none"
 										autoCorrect={false}
+										disabled={disable}
 										enablesReturnKeyAutomatically={true}
 										onFocus={this.onFocus}
 										onChangeText={text => this.setState({ prof_reg_number: text })}
@@ -589,6 +632,7 @@ class Professional extends Component {
 									<View style={{ marginLeft: 1 }}>
 										<Accordion Header="Occupational Health Screen for EPP">
 											<DocumentUploader
+										    	disabled={disable}
 												docurl={certificates + prof_reg_cert}
 												documentSelected={response => {
 													console.log('response', response)
@@ -674,12 +718,12 @@ class Professional extends Component {
 							>
 								<Genderfield
 									selected={this.state.right_to_work_in_uk === true}
-									onPress={() => this.setState({ right_to_work_in_uk: true })}
+									onPress={() => {!disable &&this.setState({ right_to_work_in_uk: true })}}
 									label="Yes"
 								/>
 								<Genderfield
 									selected={this.state.right_to_work_in_uk === false}
-									onPress={() => this.setState({ right_to_work_in_uk: false })}
+									onPress={() => {!disable &&this.setState({ right_to_work_in_uk: false })}}
 									label="No"
 								/>
 							</View>
@@ -706,6 +750,7 @@ class Professional extends Component {
 								searchPlaceholderText="Select Countries you prefer to work in"
 								showDropDowns={true}
 								expandDropDowns={true}
+								disabledItem={disable}
 								readOnlyHeadings={true}
 								onSelectedItemsChange={this.onSelectedItemsChange2}
 								selectedItems={this.state.selectedItems2}
@@ -760,7 +805,7 @@ class Professional extends Component {
 
 
 
-					<View
+					{!disable &&<View
 						style={{
 							flex: 0.2,
 							alignItems: 'center',
@@ -793,7 +838,7 @@ class Professional extends Component {
 								],
 							}}
 						/>
-					</View>
+					</View>}
 
 					<View style={{ width, height: 50, backgroundColor: '#fff' }} />
 				</KeyboardAwareScrollView>

@@ -98,6 +98,7 @@ export default class DocumentUploader extends PureComponent {
 	};
 	render() {
 		const { documentSelected } = this.state;
+		let {disabled} = this.props;
 		return (
 			<View
 				style={[
@@ -118,7 +119,7 @@ export default class DocumentUploader extends PureComponent {
 					style={{
 						flex: 1,
 					}}
-					onPress={this.documentchooser}
+					onPress={()=>{!disabled && this.documentchooser()}}
 				>
 					{!documentSelected &&!this.state.uri? (
 						<View
@@ -158,3 +159,6 @@ export default class DocumentUploader extends PureComponent {
 }
 
 
+DocumentUploader.defaultProps = {
+	disabled: false
+  };

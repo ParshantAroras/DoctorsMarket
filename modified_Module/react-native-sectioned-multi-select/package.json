@@ -1,0 +1,72 @@
+{
+  "_args": [
+    [
+      "react-native-sectioned-multi-select@0.6.0",
+      "/Users/parshant.nagpal/Documents/Parshant Nagpal/Projects/React-native/React-Navigation/doctorsmarket"
+    ]
+  ],
+  "_from": "react-native-sectioned-multi-select@0.6.0",
+  "_id": "react-native-sectioned-multi-select@0.6.0",
+  "_inBundle": false,
+  "_integrity": "sha512-YzPLWwmJLK2EuhhqT9CNouUTAWmGcBDozfHIoNEkOUYY7UwHL/gZnPgLQL9j9Qgelu4t2lA/azrxkzzjmDqM6A==",
+  "_location": "/react-native-sectioned-multi-select",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "react-native-sectioned-multi-select@0.6.0",
+    "name": "react-native-sectioned-multi-select",
+    "escapedName": "react-native-sectioned-multi-select",
+    "rawSpec": "0.6.0",
+    "saveSpec": null,
+    "fetchSpec": "0.6.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-sectioned-multi-select/-/react-native-sectioned-multi-select-0.6.0.tgz",
+  "_spec": "0.6.0",
+  "_where": "/Users/parshant.nagpal/Documents/Parshant Nagpal/Projects/React-native/React-Navigation/doctorsmarket",
+  "author": {
+    "name": "Ren Rizzolo"
+  },
+  "bugs": {
+    "url": "https://github.com/renrizzolo/react-native-sectioned-multi-select/issues"
+  },
+  "description": "a multi (or single) select component with support for sub categories, search, chips.",
+  "devDependencies": {
+    "babel-eslint": "^8.1.2",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "homepage": "https://github.com/renrizzolo/react-native-sectioned-multi-select#readme",
+  "keywords": [
+    "select",
+    "multiselect",
+    "picker",
+    "category",
+    "react",
+    "native"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "react-native-sectioned-multi-select",
+  "peerDependencies": {
+    "prop-types": "^15.6.0",
+    "react-native-vector-icons": "^4.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renrizzolo/react-native-sectioned-multi-select.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.6.0"
+}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, ScrollView, TouchableOpacity, DeviceEventEmitter, Platform, ActivityIndicator, Modal } from 'react-native';
+import { View, Text, Dimensions, ScrollView, TouchableOpacity, DeviceEventEmitter, Platform, ActivityIndicator, Modal, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import StepIndicatorView from '../../components/stpeindicatorview';
@@ -33,6 +33,7 @@ import trainingcourses from '../../utils/trainingcourses';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '../../components/button';
 import moment from 'moment';
+import Events from '../../utils/Events';
 
 let tranings = [
 	'Fire Safety',
@@ -62,10 +63,10 @@ const qualificationlist = [
 class EditStructureprofile extends Component {
 	constructor(props) {
 		super(props);
-		console.log('datadtadtadat',this.props.navigation.state.params)
-		let { Qualifications, certificates, doctor: {courses, candidates_qualifications, full_time, last_appraisal_date, last_appraisal_evidence, occupational_health_doc, salary, is_negotiable, dbs_check, candidates_referees,q1,q2 } } = this.props.navigation.state.params.profileData;
+		console.log('datadtadtadat', this.props.navigation.state.params)
+		let { Qualifications, certificates, doctor: { courses, candidates_qualifications, full_time, last_appraisal_date, last_appraisal_evidence, occupational_health_doc, salary, is_negotiable, dbs_check, candidates_referees, q1, q2 } } = this.props.navigation.state.params.profileData;
 		let candidateArray, candidateArray2, stateData = {};
-		console.log('candidates_referees',candidates_referees)
+		console.log('candidates_referees', candidates_referees)
 		candidateArray = candidates_qualifications.find(item => item['name'] === "MBBS");
 		if (candidateArray == undefined) {
 			candidateArray2 = candidates_qualifications.find(item => item['name'] === "Others");
@@ -82,11 +83,50 @@ class EditStructureprofile extends Component {
 			stateData = {
 				...stateData,
 				mainQualification: candidateArray2.name,
-				qualicompletedyear:  moment(candidateArray2.yearofcompletion).format('YYYY-MM-DD'),
+				qualicompletedyear: moment(candidateArray2.yearofcompletion).format('YYYY-MM-DD'),
 				mainQualCert: candidateArray2.cert
 			}
 		}
-		if (full_time) {
+		stateData = {
+			...stateData,
+			qualification1: '',
+			yearofcompletion1: '',
+			cert1Url: '',
+			qualification2: '',
+			yearofcompletion2: '',
+			cert2Url: '',
+			qualification3: '',
+			yearofcompletion3: '',
+			cert3Url: '',
+		}
+		candidates_qualifications.map((item, i) => {
+			if (item.name === "MBBS" && (!stateData.mainQualification === "MBBS")) {
+				stateData = {
+					...stateData,
+					qualification1: 'MBBS',
+					yearofcompletion1: moment(item.yearofcompletion).format('YYYY-MM-DD'),
+					cert1Url: item.cert,
+				}
+			} else if (item.name === "Other2" && (!stateData.mainQualification === "Others")) {
+				stateData = {
+					...stateData,
+					qualification3: 'Others2',
+					yearofcompletion3: item.cert,
+					yearofcompletion3: moment(item.yearofcompletion).format('YYYY-MM-DD'),
+					cert3Url: item.cert,
+				}
+			} else if (item.name === "MBChB") {
+				stateData = {
+					...stateData,
+					qualification2: 'MBChB',
+					yearofcompletion2: item.cert,
+					yearofcompletion2: moment(item.yearofcompletion).format('YYYY-MM-DD'),
+					cert2Url: item.cert,
+				}
+			}
+		})
+
+		if (Number(full_time) === 1) {
 			let { doctor: { current_emp, current_emp_cert, current_emp_contact } } = this.props.navigation.state.params.profileData;
 			stateData = {
 				...stateData,
@@ -109,44 +149,52 @@ class EditStructureprofile extends Component {
 				last_employer_doc,
 			}
 		}
-		
-		stateData= {...stateData,referees1: false, refree_type1: '', phone_number1: '', name1: '', email1: '', designation1: '',address1: '',referees2: false, refree_type2: '', phone_number2: '', name2: '', email2: '', designation2: '',address2: '', referees3: false, refree_type3: '', phone_number3: '', name3: '', email3: '', designation3: '',address3: '' }
+
+		stateData = { ...stateData, referees1: false, refree_type1: '', phone_number1: '', name1: '', email1: '', designation1: '', address1: '', referees2: false, refree_type2: '', phone_number2: '', name2: '', email2: '', designation2: '', address2: '', referees3: false, refree_type3: '', phone_number3: '', name3: '', email3: '', designation3: '', address3: '' }
 
 		candidates_referees.map((item) => {
-			console.log('itemitemitemitem',item)
+			console.log('itemitemitemitem', item)
 			if (item.refree_type == "1") {
-				stateData = { ...stateData, referees1: true, refree_type1: item.refree_type, phone_number1: item.phone_number, name1: item.name, email1: item.email, designation1: item.designation,address1: item.address }
+				stateData = { ...stateData, referees1: true, refree_type1: item.refree_type, phone_number1: item.phone_number, name1: item.name, email1: item.email, designation1: item.designation, address1: item.address }
 			} else if (item.refree_type == "2") {
-				stateData = { ...stateData, referees2: true, refree_type2: item.refree_type, phone_number2: item.phone_number, name2: item.name, email2: item.email, designation2: item.designation,address2: item.address  }
+				stateData = { ...stateData, referees2: true, refree_type2: item.refree_type, phone_number2: item.phone_number, name2: item.name, email2: item.email, designation2: item.designation, address2: item.address }
 			} else if (item.refree_type == "3") {
-				stateData = { ...stateData, referees3: true, refree_type3: item.refree_type, phone_number3: item.phone_number, name3: item.name, email3: item.email, designation3: item.designation,address3: item.address  }
+				stateData = { ...stateData, referees3: true, refree_type3: item.refree_type, phone_number3: item.phone_number, name3: item.name, email3: item.email, designation3: item.designation, address3: item.address }
 			}
 		})
-   
-         stateData = {...stateData,traingDocUrl1 : '' , traingDocUrl2 : '' ,traingDocUrl3 : '' ,traingDocUrl4 : '' ,traingDocUrl5 : '' ,traingDocUrl6 : '' ,traingDocUrl7 : '' ,traingDocUrl8 : '' ,traingDocUrl9 : '' ,traingDocUrl10 : '' ,traingDoc1 : {},traingDoc2 : {},traingDoc3 : {},traingDoc4 : {},traingDoc5 : {},traingDoc6 : {},traingDoc7 : {},traingDoc8 : {},traingDoc9 : {},traingDoc10 : {}}
-		 courses.map((item,i)=>{
-			    let index = i + 1;
-				stateData = {...stateData,['traingDocUrl' + index]:item };
-				console.log('mappppppppppp',stateData)
-		 })
-		console.log('statattttedata,',stateData)
+
+		stateData = { ...stateData, traingDocUrl1: '', traingDocUrl2: '', traingDocUrl3: '', traingDocUrl4: '', traingDocUrl5: '', traingDocUrl6: '', traingDocUrl7: '', traingDocUrl8: '', traingDocUrl9: '', traingDocUrl10: '', traingDoc1: {}, traingDoc2: {}, traingDoc3: {}, traingDoc4: {}, traingDoc5: {}, traingDoc6: {}, traingDoc7: {}, traingDoc8: {}, traingDoc9: {}, traingDoc10: {} }
+		courses.map((item, i) => {
+			let index = i + 1;
+				stateData = { ...stateData, ['traingDocUrl' + item.id]: item };
+				console.log('mappppppppppp', stateData)
+			
+		})
+		console.log('statattttedata,', stateData)
 		this.state = {
 			...stateData,
+			EditMore: false,
 			q1,
 			q2,
-			mainQualCertAgain : {} ,
-			current_emp_certAgain : {},
+			doc1: '',
+			doc2: '',
+			doc3: '',
+			cert1: {},
+			cert2: {},
+			cert3: {},
+			mainQualCertAgain: {},
+			current_emp_certAgain: {},
 			last_employer_docAgain: {},
 			last_appraisal_evidenceAgain: {},
 			occupational_health_doc_Again: {},
 			Qualifications,
 			certificates,
-			full_time: Number(full_time),
-			last_appraisal_date : moment(last_appraisal_date).format('YYYY-MM-DD'),
+			full_time: Number(full_time) == 1 ? 1 : 0 ,
+			last_appraisal_date: moment(last_appraisal_date).format('YYYY-MM-DD'),
 			last_appraisal_evidence,
 			occupational_health_doc,
 			dbs_check,
-			salary,
+			salary: Number(salary),
 			is_negotiable,
 			isChecked: false,
 			visible: false,
@@ -188,10 +236,25 @@ class EditStructureprofile extends Component {
 			contact3error: '',
 			email3error: '',
 			designation3error: '',
-			address3error: ''
+			address3error: '',
+			disable : true
 		};
 	}
+	componentDidMount(){
+		Events.on('backButtonPage', this.backButtonPage);
+		Events.on('editButtonPage', this.editButtonPage);
 
+	}
+	componentWillUnmount(){
+		Events.removeListener('backButtonPage', this.backButtonPage);
+		Events.removeListener('editButtonPage', this.editButtonPage);
+	}
+	backButtonPage=(data)=>{
+		this.props.navigation.pop();
+	}
+	editButtonPage=(data)=>{
+		this.setState({disable: false})
+	}
 	handlePressCheckedBox = checked => {
 		this.setState({
 			isChecked: checked,
@@ -239,50 +302,60 @@ class EditStructureprofile extends Component {
 			address3error: ''
 		});
 
-let {mainQualification,
-	qualicompletedyear,
-	mainQualCert,
-	full_time,	current_emp,
-	current_emp_contact,
-	current_emp_cert,
-	current_emp_certAgain,
-	last_employer_name,
-	last_employer_contact,
-	last_employer_doc,
-	last_appraisal_date,
-	last_appraisal_evidence,
-	occupational_health_doc,
-	dbscheckdetail,
-	referees1,
-	referees2,
-	referees3,
-	name1,
-	contact1,
-	email1,
-	designation1,
-	address1,
-	dbs_check,
-	name2,
-	contact2,
-	email2,
-	designation2,
-	address2,
-	name3,
-	contact3,
-	email3,
-	designation3,
-	address3,
-	salary,
-	phone_number1,
-	phone_number2,
-	phone_number3,
-	last_appraisal_evidenceAgain,
-	mainQualCertAgain,
-	q1,
-	q2,
-last_employer_docAgain,
-occupational_health_doc_Again,
-	is_negotiable} = this.state;
+		let { mainQualification,
+			qualicompletedyear,
+			mainQualCert,
+			full_time, current_emp,
+			current_emp_contact,
+			current_emp_cert,
+			current_emp_certAgain,
+			last_employer_name,
+			last_employer_contact,
+			last_employer_doc,
+			last_appraisal_date,
+			last_appraisal_evidence,
+			occupational_health_doc,
+			dbscheckdetail,
+			referees1,
+			referees2,
+			referees3,
+			name1,
+			contact1,
+			email1,
+			designation1,
+			address1,
+			dbs_check,
+			name2,
+			contact2,
+			email2,
+			designation2,
+			address2,
+			name3,
+			contact3,
+			email3,
+			designation3,
+			address3,
+			salary,
+			phone_number1,
+			phone_number2,
+			phone_number3,
+			last_appraisal_evidenceAgain,
+			mainQualCertAgain,
+			q1,
+			q2,
+			last_employer_docAgain,
+			occupational_health_doc_Again,
+			yearofcompletion2,
+			qualification2,
+			cert2,
+			yearofcompletion1,
+			qualification1,
+			cert1,
+			yearofcompletion3,
+			qualification3,
+			cert3,
+			is_negotiable } = this.state;
+			let {navigation} = this.props;
 		console.log("this.props", this.props);
 
 		if (!mainQualification) {
@@ -313,9 +386,9 @@ occupational_health_doc_Again,
 			});
 			return;
 		}
-		
+
 		if (full_time) {
-			if (current_emp== 0) {
+			if (current_emp == 0) {
 				this.setState({ currentcompanynameerror: 'Please enter hospital name' });
 				Toast.show({
 					text: 'Please enter hospital name',
@@ -352,7 +425,7 @@ occupational_health_doc_Again,
 				return;
 			}
 
-			if (!current_emp_cert) {
+			if (!current_emp_cert && !current_emp_certAgain.hasOwnProperty('uri')) {
 				this.setState({ uploadCurrentCompanyEvidanceError: 'Please attach one document' });
 				Toast.show({
 					text: 'Please attach one document',
@@ -402,7 +475,7 @@ occupational_health_doc_Again,
 				return;
 			}
 
-			if (!last_employer_doc) {
+			if (!last_employer_doc && !last_employer_docAgain.hasOwnProperty('uri')) {
 				this.setState({ lastemployerdetailsError: 'Please attach one document' });
 				Toast.show({
 					text: 'Please attach one document',
@@ -424,8 +497,8 @@ occupational_health_doc_Again,
 			return;
 		}
 
-		console.log('last_appraisal_evidence', last_appraisal_evidence)
-		if (!last_appraisal_evidence) {
+		console.log('last_appraisal_evidence', last_appraisal_evidence, last_appraisal_evidenceAgain)
+		if (!last_appraisal_evidence && !last_appraisal_evidenceAgain.hasOwnProperty('uri')) {
 			this.setState({ lastappraisaldocerror: 'Please attach one document' });
 			Toast.show({
 				text: 'Please attach one document',
@@ -435,7 +508,7 @@ occupational_health_doc_Again,
 			return;
 		}
 
-		if (!occupational_health_doc) {
+		if (!occupational_health_doc && !occupational_health_doc_Again.hasOwnProperty('uri')) {
 			this.setState({ eppdocError: 'Please attach one document' });
 			Toast.show({
 				text: 'Please attach one document',
@@ -443,7 +516,7 @@ occupational_health_doc_Again,
 				type: 'danger',
 			});
 			return;
-		}  
+		}
 		//pending
 		// if (traningdocs.length == 0) { 
 		// 	this.setState({ traningdocsError: 'Please attach one document' });
@@ -572,7 +645,7 @@ occupational_health_doc_Again,
 				return;
 			}
 		}
-		
+
 		if (referees2) {
 
 			if (name2.length == 0) {
@@ -772,7 +845,7 @@ occupational_health_doc_Again,
 		}
 
 
-		console.log("salary", salary)
+		console.log("salaryiiioioioioioioioioioio", salary)
 		if (salary === '' || salary === null) {
 			this.setState({ salaryerror: 'Please fill your salary' });
 			Toast.show({
@@ -841,11 +914,11 @@ occupational_health_doc_Again,
 		// formdata.append('qualification_doc', qualification_doc);
 		formdata.append('full_time', full_time ? 1 : 2);
 
-		if (full_time) {
+		if (full_time ==1) {
 
 			formdata.append('current_emp', current_emp);
 			formdata.append('current_emp_contact', current_emp_contact);
-			console.log('current_emp_certAgain',current_emp_certAgain)
+			console.log('current_emp_certAgain', current_emp_certAgain)
 			if (current_emp_certAgain.hasOwnProperty('uri')) {
 				formdata.append('current_company_doc', current_emp_certAgain);
 			}
@@ -866,21 +939,83 @@ occupational_health_doc_Again,
 			formdata.append('occupational_health_doc', occupational_health_doc_Again);
 		}
 		let qualidocsDummy = [];
-		console.log("qualicompletedyear",qualicompletedyear,)
+		console.log("qualicompletedyear", qualicompletedyear,mainQualCertAgain)
 		// qualidocs.push({qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc})
-		qualidocsDummy = [{ qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
+		
+		if(mainQualCertAgain.hasOwnProperty('uri')){
+			qualidocsDummy = [{ qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
+		 }else{
+			qualidocsDummy = [{ qualification: mainQualification, yearofcompletion: qualicompletedyear }]
+		 }	
 
 		// qualidocsDummy = [...qualidocs, { qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
 		console.log('qualidocs', qualidocsDummy)
+		if (yearofcompletion2 !== '') {
+			if (cert2.hasOwnProperty('uri')) {
+				qualidocsDummy.push({
+					qualification: qualification2,
+					yearofcompletion: yearofcompletion2,
+					cert: cert2,
+				})
+			} else {
+				qualidocsDummy.push({
+					qualification: qualification2,
+					yearofcompletion: yearofcompletion2,
+				})
+			}
+		}
+		if (yearofcompletion1 !== '') {
+			if (cert1.hasOwnProperty('uri')) {
+				qualidocsDummy.push({
+					qualification: qualification1,
+					yearofcompletion: yearofcompletion1,
+					cert: cert1,
+				})
+			} else {
+				qualidocsDummy.push({
+					qualification: qualification1,
+					yearofcompletion: yearofcompletion1,
+				})
+			}
+		}
+		if (yearofcompletion3 !== '') {
+			if (cert3.hasOwnProperty('uri')) {
+				qualidocsDummy.push({
+					qualification: qualification3,
+					yearofcompletion: yearofcompletion3,
+					cert: cert3,
+				})
+			} else {
+				qualidocsDummy.push({
+					qualification: qualification3,
+					yearofcompletion: yearofcompletion3,
+				})
+			}
+		}
 		// formdata.append(qualification.id == '1' ? 'MBBS' : 'Others', {qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc});
 		formdata.append('qualificationarray', JSON.stringify(qualidocsDummy));
 		formdata.append('salary', salary);
 		if (qualidocsDummy.length > 0) {
 			qualidocsDummy.map(item => {
 				console.log('item', item)
-				formdata.append(item.qualification, item.cert);
+				if(item && item.cert){
+					formdata.append(item.qualification, item.cert);
+				}
 			});
 		}
+
+		let traningdocs = []
+		trainingcourses.map((item, i) => {
+			let index = i + 1;
+
+			if (context.state['traingDoc' + index].hasOwnProperty('uri')) {
+				formdata.append(item.id, context.state['traingDoc' + index]);
+				traningdocs.push({ c_name: item.name, id: item.id, value: context.state['traingDoc' + index] })
+			}
+		})
+
+		formdata.append('traningdocs', JSON.stringify(traningdocs));
+
 		// formdata.append('traningdocs', JSON.stringify(traningdocs));
 		// console.log('traningdocs', traningdocs)
 		// if (traningdocs.length > 0) {
@@ -896,7 +1031,7 @@ occupational_health_doc_Again,
 				candidate_id: this.props.userdata.doctor.id,
 				refree_type: 1,
 				name: name1,
-				phone_number: contact1,
+				phone_number: phone_number1,
 				email: email1,
 				designation: designation1,
 				address: address1
@@ -907,7 +1042,7 @@ occupational_health_doc_Again,
 				candidate_id: this.props.userdata.doctor.id,
 				refree_type: 2,
 				name: name2,
-				phone_number: contact2,
+				phone_number: phone_number2,
 				email: email2,
 				designation: designation2,
 				address: address2
@@ -918,7 +1053,7 @@ occupational_health_doc_Again,
 				candidate_id: this.props.userdata.doctor.id,
 				refree_type: 3,
 				name: name3,
-				phone_number: contact3,
+				phone_number: phone_number3,
 				email: email3,
 				designation: designation3,
 				address: address3
@@ -936,14 +1071,15 @@ occupational_health_doc_Again,
 
 		RestClient.imageUpload('/apis/saveStructuralData', {}, formdata).then(response => {
 			context.setState({ visible: false });
-			console.log('resposneresposneresposneresposneresposne',response);
+			console.log('resposneresposneresposneresposneresposne', response);
 			if (response.status === 200) {
 				toast({ text: response.message });
+				navigation.pop();
 			} else if (response.status === 401) {
 				toast({ text: response.message });
 			}
 		}).catch((error) => {
-			console.log("errorerrrororororo",error)
+			console.log("errorerrrororororo", error)
 			context.setState({ visible: false });
 		});
 
@@ -953,7 +1089,7 @@ occupational_health_doc_Again,
 	_handleFocusNextField = nextField => {
 		this.refs[nextField].focus();
 	};
-	
+
 
 	render() {
 		let context = this;
@@ -998,9 +1134,14 @@ occupational_health_doc_Again,
 			address2,
 			address3,
 			q1,
-			q2
+			q2,
+			cert1Url,
+			cert2Url,
+			cert3Url,
+			mainQualification,
+			disable
 		} = this.state;
-		console.log('salarysalarysalarysalarysalary', referees1,referees3,referees2)
+		console.log('salarysalarysalarysalarysalary', salary)
 		return (
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
 				<KeyboardAwareScrollView
@@ -1034,7 +1175,7 @@ occupational_health_doc_Again,
 							</View>
 							<TouchableOpacity
 								style={{ flex: 0.3, alignItems: 'flex-end' }}
-								onPress={() => navigate('AddmoreQualification')}
+								onPress={() => { context.setState({ EditMore: true }) }}
 							>
 								<Text
 									style={{
@@ -1043,7 +1184,7 @@ occupational_health_doc_Again,
 										color: '#02B2FE',
 									}}
 								>
-									Add More
+									Edit More
 								</Text>
 							</TouchableOpacity>
 						</View>
@@ -1052,13 +1193,14 @@ occupational_health_doc_Again,
 							error={this.state.qualificationerror}
 							label={'Undergraduate'}
 							data={qualificationlist}
+							disabled={disable}
 							fontSize={15}
 							pickerStyle={{
 								borderWidth: 1,
 								borderColor: '#666666',
 								borderRadius: 5,
 							}}
-							value={this.state.mainQualification}
+							value={mainQualification}
 							itemTextStyle={[
 								{
 									fontSize: 16,
@@ -1066,8 +1208,9 @@ occupational_health_doc_Again,
 								},
 							]}
 							onChangeText={(value, index) => {
-								console.log(value,index)
-								this.setState({mainQualification: value
+								console.log(value, index)
+								this.setState({
+									mainQualification: value
 								})
 							}}
 						/>
@@ -1075,9 +1218,10 @@ occupational_health_doc_Again,
 						<View style={{ marginVertical: verticalScale(5) }}>
 							<Text style={{ opacity: 0.7 }}>Year of completion</Text>
 							<DatePickerComponent
+							    disabled={disable}
 								dob={this.state.qualicompletedyear}
-								onDateChange={date =>{
-									context.setState({qualicompletedyear : date})
+								onDateChange={date => {
+									context.setState({ qualicompletedyear: date })
 								}
 								}
 							/>
@@ -1093,9 +1237,10 @@ occupational_health_doc_Again,
 						</View>
 						<Accordion Header="Upload evidence">
 							<DocumentUploader
+						     	disabled={disable}
 								docurl={Qualifications + mainQualCert}
-								documentSelected={res => { 
-									mainQualCertAgain : res
+								documentSelected={res => {
+									context.setState({mainQualCertAgain: res})
 								}
 								}
 							/>
@@ -1128,12 +1273,12 @@ occupational_health_doc_Again,
 						<View style={{ flex: 0.8, flexDirection: 'row', marginTop: verticalScale(10) }}>
 							<Genderfield
 								selected={full_time === 1}
-								onPress={() => this.setState({ full_time: 1 })}
+								onPress={() => {!disable && this.setState({ full_time: 1 })}}
 								label="Yes"
 							/>
 							<Genderfield
 								selected={full_time === 0}
-								onPress={() => this.setState({ full_time: 0 })}
+								onPress={() => {!disable &&this.setState({ full_time: 0 })}}
 								label="No"
 							/>
 						</View>
@@ -1161,6 +1306,7 @@ occupational_health_doc_Again,
 								maxLength={11}
 								ref={this.companyName}
 								value={current_emp}
+								disabled={disable}
 								defaultValue={''}
 								keyboardType="default"
 								autoCapitalize="sentences"
@@ -1181,6 +1327,7 @@ occupational_health_doc_Again,
 								ref={'currentcompanycontact'}
 								value={current_emp_contact}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="numeric"
 								autoCapitalize="sentences"
 								autoCorrect={false}
@@ -1198,7 +1345,8 @@ occupational_health_doc_Again,
 							/>
 							{full_time ? <Accordion Header="Upload evidence">
 								<DocumentUploader
-									docurl={certificates + current_emp_cert}
+							    	disabled={disable}
+									docurl={current_emp_cert ? certificates + current_emp_cert : ''}
 									documentSelected={res => {
 										console.log('itsssssss working')
 										context.setState({ current_emp_certAgain: res })
@@ -1249,6 +1397,7 @@ occupational_health_doc_Again,
 									ref={'lastemployername'}
 									value={last_employer_name}
 									defaultValue={''}
+									disabled={disable}
 									keyboardType="default"
 									autoCapitalize="sentences"
 									autoCorrect={false}
@@ -1269,6 +1418,7 @@ occupational_health_doc_Again,
 									value={last_employer_contact}
 									defaultValue={''}
 									keyboardType="numeric"
+									disabled={disable}
 									returnKeyType="done"
 									autoCapitalize="sentences"
 									autoCorrect={false}
@@ -1286,10 +1436,10 @@ occupational_health_doc_Again,
 
 								{!full_time ? <View><Accordion Header="Upload evidence">
 									<DocumentUploader
-
-										docurl={last_employer_doc  ? certificates + last_employer_doc : ''}
+                                        disabled={disable}
+										docurl={last_employer_doc ? certificates + last_employer_doc : ''}
 										documentSelected={res =>
-											context.setState({last_employer_docAgain : res})
+											context.setState({ last_employer_docAgain: res })
 										}
 									/>
 								</Accordion></View> : null}
@@ -1319,6 +1469,7 @@ occupational_health_doc_Again,
 									Last Appraisal or ARCP (for trainees)
 								</Text>
 								<DatePickerComponent
+								   disabled={disable}
 									dob={last_appraisal_date}
 									onDateChange={date => context.setState({ last_appraisal_date: date })}
 								/>
@@ -1335,9 +1486,10 @@ occupational_health_doc_Again,
 						</View>
 						<Accordion Header="Last Appraisal Evidence">
 							<DocumentUploader
+						     	disabled={disable}
 								docurl={certificates + last_appraisal_evidence}
-								documentSelected={res => 
-								context.setState({last_appraisal_evidenceAgain: res})	
+								documentSelected={res =>
+									context.setState({ last_appraisal_evidenceAgain: res })
 								} />
 						</Accordion>
 
@@ -1353,10 +1505,11 @@ occupational_health_doc_Again,
 
 						<Accordion Header="Occupational Health Screen for EPP">
 							<DocumentUploader
+							    disabled={disable}
 								docurl={certificates + occupational_health_doc}
-								documentSelected={res => 
-									context.setState({occupational_health_doc_Again: res})
-							} />
+								documentSelected={res =>
+									context.setState({ occupational_health_doc_Again: res })
+								} />
 						</Accordion>
 						<Text
 							style={{
@@ -1393,16 +1546,17 @@ occupational_health_doc_Again,
 									flexDirection: 'row',
 									paddingBottom: 20,
 								}}
-							>  
-								{trainingcourses.map((item , i ) => {
-									let index = i+1;
-								  	console.log('trainingcourses' )
+							>
+								{trainingcourses.map((item, i) => {
+									let index = i + 1;
+									console.log('trainingcourses')
 									return (
 										<Accordion Header={item.name}>
 											<DocumentUploader
-											    docurl={this.state['traingDocUrl'+index]!= '' && this.state['traingDocUrl'+index] !== undefined && this.state['traingDocUrl'+index]._joinData && this.state['traingDocUrl'+index]._joinData.cert ? certificates + this.state['traingDocUrl'+index]._joinData.cert : '' }
-												documentSelected={res =>{
-													context.setState({['traingDoc'+index]: res })
+											     disabled={disable}
+												docurl={this.state['traingDocUrl' + index] != '' && this.state['traingDocUrl' + index] !== undefined && this.state['traingDocUrl' + index]._joinData && this.state['traingDocUrl' + index]._joinData.cert ? certificates + this.state['traingDocUrl' + index]._joinData.cert : ''}
+												documentSelected={res => {
+													context.setState({ ['traingDoc' + index]: res })
 												}
 													// SignupUpdate({
 													// 	prop: 'traningdocs',
@@ -1430,7 +1584,8 @@ occupational_health_doc_Again,
 						<TextField
 							maxLength={3}
 							ref={'salary'}
-							value={salary}
+							value={salary.toString()}
+							disabled={disable}
 							keyboardType="numeric"
 							autoCapitalize="sentences"
 							autoCorrect={false}
@@ -1447,7 +1602,6 @@ occupational_health_doc_Again,
 							error={this.state.salaryerror}
 							tintColor={'#02B2FE'}
 						/>
-
 						<View style={{ flex: 0.5, marginTop: verticalScale(10) }}>
 							<View style={{ flex: 0.2 }}>
 								<Text
@@ -1465,12 +1619,12 @@ occupational_health_doc_Again,
 							<View style={{ flex: 0.8, flexDirection: 'row', marginTop: verticalScale(10) }}>
 								<Genderfield
 									selected={is_negotiable === true}
-									onPress={() => context.setState({ is_negotiable: true })}
+									onPress={() => {!disable && context.setState({ is_negotiable: true })}}
 									label="Yes"
 								/>
 								<Genderfield
 									selected={is_negotiable === false}
-									onPress={() => context.setState({ is_negotiable: false })}
+									onPress={() => {!disable && context.setState({ is_negotiable: false })}}
 									label="No"
 								/>
 							</View>
@@ -1502,17 +1656,17 @@ occupational_health_doc_Again,
 							<View style={{ flex: 0.8 }}>
 								<GenderfieldLong
 									selected={dbs_check == 1}
-									onPress={() => context.setState({ dbs_check: 1 })}
+									onPress={() => {!disable && context.setState({ dbs_check: 1 })}}
 									label="Yes"
 								/>
 								<GenderfieldLong
 									selected={dbs_check == 0}
-									onPress={() => context.setState({ dbs_check: 1 })}
+									onPress={() => {!disable && context.setState({ dbs_check: 0 })}}
 									label="No"
 								/>
 								<GenderfieldLong
 									selected={dbs_check == 2}
-									onPress={() => context.setState({ dbs_check: 2 })}
+									onPress={() => {!disable && context.setState({ dbs_check: 2 })}}
 									label="Need to Apply"
 								/>
 
@@ -1563,7 +1717,7 @@ occupational_health_doc_Again,
 										height: moderateScale(25),
 									}}
 									checked={referees1}
-									onChange={checked => context.setState({ referees1: !referees1 })}
+									onChange={checked => {!disable && context.setState({ referees1: !referees1 })}}
 								/>
 								<CheckBox
 									label="Past Employer"
@@ -1579,7 +1733,7 @@ occupational_health_doc_Again,
 										height: moderateScale(25),
 									}}
 									checked={referees2}
-									onChange={checked => context.setState({ referees2: !referees2 })}
+									onChange={checked => {!disable && context.setState({ referees2: !referees2 })}}
 								/>
 								<CheckBox
 									label="Professional Known"
@@ -1595,7 +1749,7 @@ occupational_health_doc_Again,
 										height: moderateScale(25),
 									}}
 									checked={referees3}
-									onChange={checked => context.setState({ referees3: !referees3 })}
+									onChange={checked => {!disable && context.setState({ referees3: !referees3 })}}
 								/>
 								{/* <GenderfieldLong
 									selected={this.props.referees2 == true}
@@ -1645,14 +1799,15 @@ occupational_health_doc_Again,
 								ref={'name'}
 								value={name1}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="default"
 								autoCapitalize="sentences"
 								autoCorrect={false}
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({name1: text})
-								
+									context.setState({ name1: text })
+
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'currentcompanycontact1')}
 								returnKeyType="next"
@@ -1666,6 +1821,7 @@ occupational_health_doc_Again,
 								value={phone_number1}
 								defaultValue={''}
 								keyboardType="numeric"
+								disabled={disable}
 								autoCapitalize="sentences"
 								autoCorrect={false}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'email1')}
@@ -1673,9 +1829,9 @@ occupational_health_doc_Again,
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-								 context.setState({
-									 phone_number1 : text
-								 })
+									context.setState({
+										phone_number1: text
+									})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'email1')}
 								returnKeyType="next"
@@ -1689,12 +1845,13 @@ occupational_health_doc_Again,
 								value={email1}
 								defaultValue={''}
 								keyboardType="email-address"
+								disabled={disable}
 								autoCapitalize="none"
 								autoCorrect={false}
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({email1: text})
+									context.setState({ email1: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'designation1')}
 								returnKeyType="next"
@@ -1707,6 +1864,7 @@ occupational_health_doc_Again,
 								ref={'designation1'}
 								value={designation1}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="default"
 								autoCapitalize="sentences"
 								autoCorrect={false}
@@ -1714,7 +1872,7 @@ occupational_health_doc_Again,
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({designation1: text})
+									context.setState({ designation1: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'address1')}
 								returnKeyType="next"
@@ -1727,6 +1885,7 @@ occupational_health_doc_Again,
 								ref={'address1'}
 								value={address1}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="default"
 								autoCapitalize="sentences"
 								autoCorrect={false}
@@ -1734,7 +1893,7 @@ occupational_health_doc_Again,
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({address1: text})
+									context.setState({ address1: text })
 								}}
 								//onSubmitEditing={this._handleFocusNextField.bind(this, 'Surname')}
 								returnKeyType="next"
@@ -1782,11 +1941,12 @@ occupational_health_doc_Again,
 								defaultValue={''}
 								keyboardType="default"
 								autoCapitalize="sentences"
+								disabled={disable}
 								autoCorrect={false}
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({name2: text})
+									context.setState({ name2: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'currentcompanycontact2')}
 								returnKeyType="next"
@@ -1800,13 +1960,14 @@ occupational_health_doc_Again,
 								value={phone_number2}
 								defaultValue={''}
 								keyboardType="numeric"
+								disabled={disable}
 								autoCapitalize="sentences"
 								autoCorrect={false}
 								returnKeyType="done"
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-								   context.setState({phone_number2 : text})
+									context.setState({ phone_number2: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'email2')}
 								returnKeyType="next"
@@ -1819,13 +1980,14 @@ occupational_health_doc_Again,
 								ref={'email2'}
 								value={email2}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="email-address"
 								autoCapitalize="none"
 								autoCorrect={false}
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({email2: text})
+									context.setState({ email2: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'designation2')}
 								returnKeyType="next"
@@ -1837,6 +1999,7 @@ occupational_health_doc_Again,
 								maxLength={20}
 								ref={'designation2'}
 								value={designation2}
+								disabled={disable}
 								defaultValue={''}
 								keyboardType="default"
 								autoCapitalize="sentences"
@@ -1845,7 +2008,7 @@ occupational_health_doc_Again,
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({designation2: text})
+									context.setState({ designation2: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'address2')}
 								returnKeyType="next"
@@ -1857,6 +2020,7 @@ occupational_health_doc_Again,
 								maxLength={20}
 								ref={'address2'}
 								value={address2}
+								disabled={disable}
 								defaultValue={''}
 								keyboardType="default"
 								autoCapitalize="sentences"
@@ -1865,7 +2029,7 @@ occupational_health_doc_Again,
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({address2: text})
+									context.setState({ address2: text })
 								}}
 								//onSubmitEditing={this._handleFocusNextField.bind(this, 'Surname')}
 								returnKeyType="next"
@@ -1910,13 +2074,14 @@ occupational_health_doc_Again,
 								ref={'name3'}
 								value={name3}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="default"
 								autoCapitalize="sentences"
 								autoCorrect={false}
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({name3: text})
+									context.setState({ name3: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'currentcompanycontact3')}
 								returnKeyType="next"
@@ -1927,8 +2092,9 @@ occupational_health_doc_Again,
 							<TextField
 								maxLength={11}
 								ref={'currentcompanycontact3'}
-								value={phone_number3}
 								defaultValue={''}
+								value={phone_number3?phone_number3 : ''}
+								disabled={disable}
 								keyboardType="numeric"
 								autoCapitalize="sentences"
 								autoCorrect={false}
@@ -1936,7 +2102,7 @@ occupational_health_doc_Again,
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-								context.setState({phone_number3 : text})
+									context.setState({ phone_number3: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'email3')}
 								returnKeyType="next"
@@ -1949,13 +2115,14 @@ occupational_health_doc_Again,
 								ref={'email3'}
 								value={email3}
 								defaultValue={''}
+								disabled={disable}
 								keyboardType="email-address"
 								autoCapitalize="none"
 								autoCorrect={false}
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({email3: text})
+									context.setState({ email3: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'designation3')}
 								returnKeyType="next"
@@ -1969,13 +2136,14 @@ occupational_health_doc_Again,
 								value={designation3}
 								defaultValue={''}
 								keyboardType="default"
+								disabled={disable}
 								autoCapitalize="sentences"
 								autoCorrect={false}
 								returnKeyType="done"
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({designation3: text})
+									context.setState({ designation3: text })
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'address3')}
 								returnKeyType="next"
@@ -1989,13 +2157,14 @@ occupational_health_doc_Again,
 								value={address3}
 								defaultValue={''}
 								keyboardType="default"
+								disabled={disable}
 								autoCapitalize="sentences"
 								autoCorrect={false}
 								returnKeyType="done"
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									context.setState({address3: text})
+									context.setState({ address3: text })
 								}}
 								//onSubmitEditing={this._handleFocusNextField.bind(this, 'Surname')}
 								returnKeyType="next"
@@ -2037,12 +2206,12 @@ occupational_health_doc_Again,
 						<View style={{ flex: 0.8, flexDirection: 'row', marginTop: verticalScale(10) }}>
 							<Genderfield
 								selected={q1 === true}
-								onPress={() => context.setState({q1: true})}
+								onPress={() => {!disable && context.setState({ q1: true })}}
 								label="Yes"
 							/>
 							<Genderfield
 								selected={q1 === false}
-								onPress={() => context.setState({q1: false})}
+								onPress={() => {!disable && context.setState({ q1: false })}}
 								label="No"
 							/>
 						</View>
@@ -2074,12 +2243,12 @@ occupational_health_doc_Again,
 						<View style={{ flex: 0.8, flexDirection: 'row', marginTop: verticalScale(10) }}>
 							<Genderfield
 								selected={q2 === true}
-								onPress={() => context.setState({q2 : true})}
+								onPress={() => {!disable && context.setState({ q2: true })}}
 								label="Yes"
 							/>
 							<Genderfield
 								selected={q2 === false}
-								onPress={() => context.setState({q2 : false})}
+								onPress={() => {!disable && context.setState({ q2: false })}}
 								label="No"
 							/>
 						</View>
@@ -2093,7 +2262,7 @@ occupational_health_doc_Again,
 							{this.state.question2error}
 						</Text>
 					</View>
-					<View
+					{!disable && <View
 						style={{
 							flex: 0.2,
 							alignItems: 'center',
@@ -2126,7 +2295,7 @@ occupational_health_doc_Again,
 								],
 							}}
 						/>
-					</View>
+					</View>}
 					<View style={{ width, height: 180 }} />
 				</KeyboardAwareScrollView>
 				{this.state.visible && (
@@ -2156,16 +2325,115 @@ occupational_health_doc_Again,
 						</View>
 					</Modal>
 				)}
-			</View>
+
+				{this.state.EditMore && (
+					<Modal
+						backdrop={false}
+						isOpen={this.state.EditMore}
+						onClosed={() => this.setState({ EditMore: false })}
+						style={{
+							flex: 1,
+							backgroundColor: 'transparent',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+						position={'center'}
+					><View style={{ flex: 1 }}>
+							<TouchableOpacity style={{
+								flex: 1, zIndex: 1, position: 'absolute',
+								right: moderateScale(4),
+								top: verticalScale(30), height: verticalScale(60), width: moderateScale(60), justifyContent: 'center', alignItems: 'center'
+							}} onPress={() => { this.setState({ EditMore: false }) }}>
+								<Image source={require('../../images/Group51.png')} style={{ width: 15, height: 15 }} />
+							</TouchableOpacity>
+							<ScrollView style={{ padding: 10, paddingTop: verticalScale(25), backgroundColor: 'white' }}>
+
+								{!(mainQualification === 'MBBS') && <Accordion expanded Header="MBBS Qualification document">
+									<Text style={{ opacity: 0.7, marginBottom: 15 }}>Year of completion</Text>
+									<DatePickerComponent 
+									 disabled={disable}
+									dob={this.state.yearofcompletion2} 
+									onDateChange={date => this.setState({ yearofcompletion2: date })} />
+									<DocumentUploader
+									   disabled={disable}
+										styles={{ marginBottom: 10, height: verticalScale(120) }}
+										docurl={cert1Url ? Qualifications + cert1Url : ''}
+										documentSelected={res => {
+											this.setState({
+												qualification1: 'MBBS',
+												yearofcompletion1: this.state.yearofcompletion2,
+												cert1: res,
+											})
+										}
+										}
+									/>
+									<View style={{ width, height: 20 }} />
+								</Accordion>}
+								<Accordion expanded Header="MB ChB Qualification document">
+									<Text style={{ opacity: 0.7, marginBottom: 15 }}>Year of completion</Text>
+									<DatePickerComponent 
+									disabled={disable}
+									dob={this.state.yearofcompletion2} 
+									onDateChange={date => this.setState({ yearofcompletion2: date })} />
+									<DocumentUploader
+									disabled={disable}
+										styles={{ marginBottom: 10, height: verticalScale(120) }}
+										docurl={cert2Url ? Qualifications + cert2Url : ''}
+										documentSelected={res => {
+											this.setState({
+												qualification2: 'MBChB',
+												yearofcompletion2: this.state.yearofcompletion2,
+												cert2: res,
+											})
+										}
+											// SignupUpdate({
+											// 	prop: 'qualidocs',
+											// 	value: [
+											// 		...this.props.qualidocs,
+											// 		{
+											// 			qualification: 'MBChB',
+											// 			yearofcompletion: this.state.doc2,
+											// 			cert: res,
+											// 		},
+											// 	],
+											// })
+										}
+									/>
+									<View style={{ width, height: 20 }} />
+								</Accordion>
+								<Accordion expanded Header="Other Qualification document">
+									<Text style={{ opacity: 0.7, marginBottom: 15 }}>Year of completion</Text>
+									<DatePickerComponent
+									disabled={disable}
+									dob={this.state.yearofcompletion3} onDateChange={date => this.setState({ yearofcompletion3: date })} />
+									<DocumentUploader
+										disabled={disable}
+										styles={{ marginBottom: 10, height: verticalScale(120) }}
+										docurl={cert3Url ? Qualifications + cert3Url : ''}
+										documentSelected={res => {
+											this.setState({
+												qualification3: 'Other2',
+												yearofcompletion3: this.state.yearofcompletion3,
+												cert3: res,
+											})
+										}
+										}
+									/>
+									<View style={{ width, height: 20 }} />
+								</Accordion>
+							</ScrollView>
+						</View>
+					</Modal>
+				)}	</View>
 		);
 	}
 }
 
 const mapStateToProps = ({ SignupReducer, Loginreducer }) => {
-	const { userid, token,userdata } = Loginreducer;
+	const { userid, token, userdata } = Loginreducer;
 
 	return {
-		userid, token,userdata
+		userid, token, userdata
 	};
 };
 

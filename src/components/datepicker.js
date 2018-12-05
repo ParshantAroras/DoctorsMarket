@@ -17,6 +17,7 @@ export default class DatePickerComponent extends Component {
 				format="YYYY-MM-DD"
 				minDate="1950-05-01"
 				maxDate="2020-06-01"
+				disabled={this.props.disabled}
 				confirmBtnText="Confirm"
 				cancelBtnText="Cancel"
 				customStyles={{
@@ -36,3 +37,6 @@ export default class DatePickerComponent extends Component {
 		);
 	}
 }
+DatePickerComponent.defaultProps = {
+	disabled: false
+  };

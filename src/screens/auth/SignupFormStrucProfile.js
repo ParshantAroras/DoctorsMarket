@@ -889,6 +889,7 @@ class SignupupFormStrucProfile extends Component {
 		formdata.append('q1', question1);
 		formdata.append('q2', question2);
 		formdata.append('is_negotiable', is_negotiable);
+		console.log('simpleFormdata',formdata)
 		console.log(JSON.stringify(formdata), 'formdtata====<>');
 		context.setState({ visible: true });
 		//	apis/saveStructuralData

@@ -26,6 +26,8 @@ import DatePickerComponent from '../../components/datepicker';
 import title from '../../utils/titles';
 import { Toast } from 'native-base';
 import moment from 'moment';
+import Events from '../../utils/Events';
+
 
 class ProfileDetail extends Component {
 	constructor(props) {
@@ -63,10 +65,23 @@ class ProfileDetail extends Component {
 			postalcode : post_code,
 			telephone: home_telephone,
 			loader: false,
+			disable : true
 		};
 	}
-    componentDidMount(){
-	console.log('ProfileDetail',this.props);
+	componentDidMount(){
+		Events.on('backButtonPage', this.backButtonPage);
+		Events.on('editButtonPage', this.editButtonPage);
+
+	}
+	componentWillUnmount(){
+		Events.removeListener('backButtonPage', this.backButtonPage);
+		Events.removeListener('editButtonPage', this.editButtonPage);
+	}
+	backButtonPage=(data)=>{
+		this.props.navigation.pop();
+	}
+	editButtonPage=(data)=>{
+		this.setState({disable: false})
 	}
 	onFocus = () => {};
 	save = () => {
@@ -281,9 +296,7 @@ class ProfileDetail extends Component {
 			});
 			return;
 		}
-
-		if (postalcode.legnth === 0) {
-			//	alert('lklk');
+		if (postalcode.length == 0) {
 			this.setState({ postalerror: 'Please enter postal code' });
 			Toast.show({
 				text: 'Please enter postal code',
@@ -369,7 +382,7 @@ class ProfileDetail extends Component {
 			navigation: { navigate },
 			SignupUpdate,
 		} = this.props;
-		let { error, validemail } = this.state;
+		let { error, validemail,disable } = this.state;
 		console.log(validemail, 'validemail');
 		return (
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -388,6 +401,7 @@ class ProfileDetail extends Component {
 								label={'Title'}
 								data={title}
 								fontSize={15}
+								disabled={disable}
 								pickerStyle={{
 									borderWidth: 1,
 									borderColor: '#666666',
@@ -408,6 +422,7 @@ class ProfileDetail extends Component {
 							maxLength={18}
 							ref={this.Forename}
 							value={this.state.Forename}
+							disabled={disable}
 							defaultValue={''}
 							keyboardType="default"
 							autoCapitalize="sentences"
@@ -427,6 +442,7 @@ class ProfileDetail extends Component {
 							ref="Surname"
 							value={this.state.secondname}
 							defaultValue={''}
+							disabled={disable}
 							keyboardType="default"
 							autoCapitalize="sentences"
 							autoCorrect={false}
@@ -445,6 +461,7 @@ class ProfileDetail extends Component {
 							ref="email"
 							value={this.state.email}
 							editable={false}
+							disabled={disable}
 							defaultValue={''}
 							keyboardType="default"
 							autoCapitalize="sentences"
@@ -464,6 +481,7 @@ class ProfileDetail extends Component {
 							ref="phonenumber"
 							value={this.state.phonenumber}
 							defaultValue={''}
+							disabled={disable}
 							keyboardType="numeric"
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -489,6 +507,7 @@ class ProfileDetail extends Component {
 						>
 							<Text style={{ opacity: 0.7, marginBottom: 15 }}>Date of Birth</Text>
 							<DatePickerComponent
+						        disabled={disable}
 								dob={this.state.dob}
 								onDateChange={date => this.setState({ dob: date })}
 							/>
@@ -524,12 +543,12 @@ class ProfileDetail extends Component {
 								<Genderfield
 									label="male"
 									selected={this.state.gender_id === true}
-									onPress={() => context.setState({gender_id : true})}
+									onPress={() => {!disable &&context.setState({gender_id : true})}}
 								/>
 								<Genderfield
 									label="female"
 									selected={this.state.gender_id === false}
-									onPress={() => context.setState({gender_id : false})}
+									onPress={() => {!disable &&context.setState({gender_id : false})}}
 								/>
 								{/* <Genderfield
 									label="others"
@@ -552,6 +571,7 @@ class ProfileDetail extends Component {
 							label={'Country'}
 							data={countryname}
 							fontSize={15}
+							disabled={disable}
 							pickerStyle={{
 								borderWidth: 1,
 								borderColor: '#666666',
@@ -573,6 +593,7 @@ class ProfileDetail extends Component {
 								error={this.state.nationalerror}
 								label={'Nationality'}
 								data={country}
+								disabled={disable}
 								fontSize={15}
 								pickerStyle={{
 									borderWidth: 1,
@@ -596,6 +617,7 @@ class ProfileDetail extends Component {
 							ref="city"
 							value={this.state.city}
 							defaultValue={''}
+							disabled={disable}
 							keyboardType="default"
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -614,6 +636,7 @@ class ProfileDetail extends Component {
 							ref="street"
 							value={this.state.streetname}
 							defaultValue={''}
+							disabled={disable}
 							keyboardType="default"
 							autoCapitalize="none"
 							autoCorrect={false}
@@ -629,6 +652,7 @@ class ProfileDetail extends Component {
 							<TextField
 							maxLength={18}
 							ref="streetNumber"
+							disabled={disable}
 							value={this.state.street_number}
 							defaultValue={''}
 							keyboardType="default"
@@ -647,6 +671,7 @@ class ProfileDetail extends Component {
 						<TextField
 							maxLength={7}
 							ref="postalcode"
+							disabled={disable}
 							value={this.state.postalcode}
 							defaultValue={''}
 							keyboardType="default"
@@ -665,6 +690,7 @@ class ProfileDetail extends Component {
 						<TextField
 							maxLength={11}
 							ref="telephone"
+							disabled={disable}
 							value={this.state.telephone}
 							defaultValue={''}
 							keyboardType="numeric"
@@ -681,7 +707,7 @@ class ProfileDetail extends Component {
 						/>
 						<View style={{ width, height: 40 }} />
 					</View>
-					<View
+					{!disable &&<View
 						style={{
 							flex: 0.2,
 							alignItems: 'center',
@@ -714,7 +740,7 @@ class ProfileDetail extends Component {
 								],
 							}}
 						/>
-					</View>
+					</View>}
 				
 					<View style={{ width, height: 50, backgroundColor: '#fff' }} />
 				</KeyboardAwareScrollView>

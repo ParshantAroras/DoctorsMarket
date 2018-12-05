@@ -35,7 +35,9 @@ class ProfileScreen extends Component {
 			]),
 		};
 	}
-	componentDidMount(){
+
+
+	callApi=(Screen)=>{
 		let context = this;
 		console.log('this.props', this.props);
 		const { token, userid,navigation } = this.props;
@@ -46,10 +48,19 @@ class ProfileScreen extends Component {
 		this.props.ViewMyProfile(body,(data)=>{
 		 console.log('datdatadatadataa',data)
 		 context.setState({profileData:data});
+      if(Screen == 'ProfileDetail'){
+		navigation.navigate('ProfileDetail',{profileData : data});
+	  }else if(Screen == 'EditStructuredProfile'){
+		navigation.navigate('EditStructuredProfile',{profileData : data});
+	  }else if(Screen == 'Professional'){
+		navigation.navigate('Professional',{profileData : data});
+	  }
+
 		});
 	}
 
 	onPress = rowData => {
+		let context = this;
 		console.log(rowData, 'rowData');
 		let {profileData} = this.state;
 		const { navigation, userid, token } = this.props;
@@ -63,11 +74,15 @@ class ProfileScreen extends Component {
 			navigation.navigate('Changeemail');
 		} else if (rowData === 'Profile Details') {
 			console.log('profileData',profileData)
-			navigation.navigate('ProfileDetail',{profileData});
+			context.callApi('ProfileDetail');
+			// navigation.navigate('ProfileDetail',{profileData});
 		} else if (rowData === 'Professional Details') {
-			navigation.navigate('Professional',{profileData});
+			context.callApi('Professional');
+
+			// navigation.navigate('Professional',{profileData});
 		} else if (rowData === 'Structured Profile Details') {
-		    navigation.navigate('EditStructuredProfile',{profileData});
+			context.callApi('EditStructuredProfile');
+		    // navigation.navigate('EditStructuredProfile',{profileData});
 		}else if(rowData == 'Terms and Policy' ){
 			navigation.navigate('WebViewPage',{
 				uri : '/terms_conditions'

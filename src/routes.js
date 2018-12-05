@@ -26,6 +26,7 @@ import ChangeProfileImage from './screens/profile/Changeprofile';
 import Changepassword from './screens/profile/Changepassword';
 import Drawer from './Drawer';
 import CustomHeader from './components/customheader';
+import CustomHeader2 from './components/CustomHeader2';
 import Changeemail from './screens/profile/Changeemail';
 import ProfileDetail from './screens/profile/Profiledetails';
 import Professional from './screens/profile/Professionaldetails';
@@ -238,29 +239,24 @@ const MyProfileStackNavigator = StackNavigator({
 	ProfileDetail: {
 		screen: ProfileDetail,
 		navigationOptions: {
-			headerStyle: globalStyles.headerWithoutShadow,
-			headerTintColor: '#37a6ff',
-			title: 'Profile Details',
+			header: props => <CustomHeader2 title={'ProfileDetail'}{...props} />,
 			tabBarVisible: false,
 		},
 	},
 	Professional: {
 		screen: Professional,
 		navigationOptions: {
-			headerStyle: globalStyles.headerWithoutShadow,
-			headerTintColor: '#37a6ff',
-			title: 'Professional Details',
+			header: props => <CustomHeader2 title={'Professional'}{...props} />,
 			tabBarVisible: false,
 		},
 	},
 	EditStructuredProfile: {
 		screen: EditStructuredProfile,
 		navigationOptions: {
-			headerStyle: globalStyles.headerWithoutShadow,
-			headerTintColor: '#37a6ff',
-			title: 'Edit Professional Details',
+			header: props => <CustomHeader2 title={'Structured Profile'}{...props} />,
 			tabBarVisible: false,
 		},
+		
 	},
 	
 	Contactdetail: {
