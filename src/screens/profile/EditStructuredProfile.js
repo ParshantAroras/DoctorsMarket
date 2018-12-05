@@ -31,6 +31,8 @@ import { reset } from '../../actions/Loginactions';
 import { resetNavigationTo } from '../../utils';
 import trainingcourses from '../../utils/trainingcourses';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Button from '../../components/button';
+import moment from 'moment';
 
 let tranings = [
 	'Fire Safety',
@@ -60,8 +62,10 @@ const qualificationlist = [
 class EditStructureprofile extends Component {
 	constructor(props) {
 		super(props);
-		let { Qualifications, certificates, doctor: { candidates_qualifications, full_time, last_appraisal_date, last_appraisal_evidence, occupational_health_doc, salary, is_negotiable, dbs_check, candidates_referees } } = this.props.navigation.state.params.profileData;
+		console.log('datadtadtadat',this.props.navigation.state.params)
+		let { Qualifications, certificates, doctor: {courses, candidates_qualifications, full_time, last_appraisal_date, last_appraisal_evidence, occupational_health_doc, salary, is_negotiable, dbs_check, candidates_referees,q1,q2 } } = this.props.navigation.state.params.profileData;
 		let candidateArray, candidateArray2, stateData = {};
+		console.log('candidates_referees',candidates_referees)
 		candidateArray = candidates_qualifications.find(item => item['name'] === "MBBS");
 		if (candidateArray == undefined) {
 			candidateArray2 = candidates_qualifications.find(item => item['name'] === "Others");
@@ -70,7 +74,7 @@ class EditStructureprofile extends Component {
 			stateData = {
 				...stateData,
 				mainQualification: candidateArray.name,
-				qualicompletedyear: candidateArray.yearofcompletion,
+				qualicompletedyear: moment(candidateArray.yearofcompletion).format('YYYY-MM-DD'),
 				mainQualCert: candidateArray.cert
 			}
 		}
@@ -78,7 +82,7 @@ class EditStructureprofile extends Component {
 			stateData = {
 				...stateData,
 				mainQualification: candidateArray2.name,
-				qualicompletedyear: candidateArray2.yearofcompletion,
+				qualicompletedyear:  moment(candidateArray2.yearofcompletion).format('YYYY-MM-DD'),
 				mainQualCert: candidateArray2.cert
 			}
 		}
@@ -91,7 +95,7 @@ class EditStructureprofile extends Component {
 				current_emp_contact,
 				last_employer_name: '',
 				last_employer_contact: '',
-				last_employer_doc: {}
+				last_employer_doc: ''
 			}
 		} else {
 			let { doctor: { last_employer_name, last_employer_contact, last_employer_doc } } = this.props.navigation.state.params.profileData;
@@ -99,32 +103,46 @@ class EditStructureprofile extends Component {
 				...stateData,
 				current_emp: '',
 				current_emp_cert: '',
-				current_emp_contact: {},
+				current_emp_contact: '',
 				last_employer_name,
 				last_employer_contact,
 				last_employer_doc,
 			}
 		}
+		
+		stateData= {...stateData,referees1: false, refree_type1: '', phone_number1: '', name1: '', email1: '', designation1: '',address1: '',referees2: false, refree_type2: '', phone_number2: '', name2: '', email2: '', designation2: '',address2: '', referees3: false, refree_type3: '', phone_number3: '', name3: '', email3: '', designation3: '',address3: '' }
 
 		candidates_referees.map((item) => {
+			console.log('itemitemitemitem',item)
 			if (item.refree_type == "1") {
-				stateData = { ...stateData, referees1: true, refree_type1: item.refree_type, phone_number1: item.phone_number, name1: item.name, email1: item.email, designation1: item.designation }
+				stateData = { ...stateData, referees1: true, refree_type1: item.refree_type, phone_number1: item.phone_number, name1: item.name, email1: item.email, designation1: item.designation,address1: item.address }
 			} else if (item.refree_type == "2") {
-				stateData = { ...stateData, referees2: true, refree_type2: item.refree_type, phone_number2: item.phone_number, name2: item.name, email2: item.email, designation2: item.designation }
+				stateData = { ...stateData, referees2: true, refree_type2: item.refree_type, phone_number2: item.phone_number, name2: item.name, email2: item.email, designation2: item.designation,address2: item.address  }
 			} else if (item.refree_type == "3") {
-				stateData = { ...stateData, referees3: true, refree_type3: item.refree_type, phone_number3: item.phone_number, name3: item.name, email3: item.email, designation3: item.designation }
+				stateData = { ...stateData, referees3: true, refree_type3: item.refree_type, phone_number3: item.phone_number, name3: item.name, email3: item.email, designation3: item.designation,address3: item.address  }
 			}
 		})
-
-
-
-		console.log("candidateArray2candidateArray2candidateArray2", salary)
+   
+         stateData = {...stateData,traingDocUrl1 : '' , traingDocUrl2 : '' ,traingDocUrl3 : '' ,traingDocUrl4 : '' ,traingDocUrl5 : '' ,traingDocUrl6 : '' ,traingDocUrl7 : '' ,traingDocUrl8 : '' ,traingDocUrl9 : '' ,traingDocUrl10 : '' ,traingDoc1 : {},traingDoc2 : {},traingDoc3 : {},traingDoc4 : {},traingDoc5 : {},traingDoc6 : {},traingDoc7 : {},traingDoc8 : {},traingDoc9 : {},traingDoc10 : {}}
+		 courses.map((item,i)=>{
+			    let index = i + 1;
+				stateData = {...stateData,['traingDocUrl' + index]:item };
+				console.log('mappppppppppp',stateData)
+		 })
+		console.log('statattttedata,',stateData)
 		this.state = {
 			...stateData,
+			q1,
+			q2,
+			mainQualCertAgain : {} ,
+			current_emp_certAgain : {},
+			last_employer_docAgain: {},
+			last_appraisal_evidenceAgain: {},
+			occupational_health_doc_Again: {},
 			Qualifications,
 			certificates,
 			full_time: Number(full_time),
-			last_appraisal_date,
+			last_appraisal_date : moment(last_appraisal_date).format('YYYY-MM-DD'),
 			last_appraisal_evidence,
 			occupational_health_doc,
 			dbs_check,
@@ -141,6 +159,7 @@ class EditStructureprofile extends Component {
 			lastAppraisal: '',
 			immunisationStatus: '',
 			immunisationStatus2: '',
+			uploadCurrentCompanyEvidanceError: '',
 			qualificationerror: '',
 			currentcompanycontacterror: '',
 			currentcompanynameerror: '',
@@ -179,16 +198,16 @@ class EditStructureprofile extends Component {
 		});
 	};
 
-	nextButton = () => {
+	editProfile = () => {
 		let context = this;
 		this.setState({
 			qualificationerror: '',
 			qualicompletedyearerror: '',
 			dbserror: '',
-			qualificationerror: '',
 			currentcompanycontacterror: '',
 			currentcompanynameerror: '',
 			uploadEvidanceError: '',
+			uploadCurrentCompanyEvidanceError: '',
 			lastemployernameerror: '',
 			lastemployercontacterror: '',
 			lastemployerdetailsError: '',
@@ -220,10 +239,53 @@ class EditStructureprofile extends Component {
 			address3error: ''
 		});
 
-
+let {mainQualification,
+	qualicompletedyear,
+	mainQualCert,
+	full_time,	current_emp,
+	current_emp_contact,
+	current_emp_cert,
+	current_emp_certAgain,
+	last_employer_name,
+	last_employer_contact,
+	last_employer_doc,
+	last_appraisal_date,
+	last_appraisal_evidence,
+	occupational_health_doc,
+	dbscheckdetail,
+	referees1,
+	referees2,
+	referees3,
+	name1,
+	contact1,
+	email1,
+	designation1,
+	address1,
+	dbs_check,
+	name2,
+	contact2,
+	email2,
+	designation2,
+	address2,
+	name3,
+	contact3,
+	email3,
+	designation3,
+	address3,
+	salary,
+	phone_number1,
+	phone_number2,
+	phone_number3,
+	last_appraisal_evidenceAgain,
+	mainQualCertAgain,
+	q1,
+	q2,
+last_employer_docAgain,
+occupational_health_doc_Again,
+	is_negotiable} = this.state;
 		console.log("this.props", this.props);
 
-		if (!qualification.id) {
+		if (!mainQualification) {
 			this.setState({ qualificationerror: 'Please select your qualification' });
 			Toast.show({
 				text: 'Please select your qualification',
@@ -242,7 +304,7 @@ class EditStructureprofile extends Component {
 			});
 			return;
 		}
-		if (!qualification_doc.hasOwnProperty('uri')) {
+		if (!mainQualCert) {
 			this.setState({ qualidocserror: 'Please attach one document' });
 			Toast.show({
 				text: 'Please attach one document',
@@ -251,9 +313,9 @@ class EditStructureprofile extends Component {
 			});
 			return;
 		}
-		console.log("currentcompanyname", currentcompanyname, currentcompanyname.length > 0, !Regex.validateString(currentcompanyname))
-		if (this.props.isCurrentWorking) {
-			if (currentcompanyname.length == 0) {
+		
+		if (full_time) {
+			if (current_emp== 0) {
 				this.setState({ currentcompanynameerror: 'Please enter hospital name' });
 				Toast.show({
 					text: 'Please enter hospital name',
@@ -262,7 +324,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (currentcompanyname.length > 0 && !Regex.validateString(currentcompanyname)) {
+			if (current_emp.length > 0 && !Regex.validateString(current_emp)) {
 				this.setState({ currentcompanynameerror: 'Please enter a valid hospital name' });
 				Toast.show({
 					text: 'Please enter a valid hospital name',
@@ -271,7 +333,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (currentcompanycontact.length == 0) {
+			if (current_emp_contact.length == 0) {
 				this.setState({ currentcompanycontacterror: 'Please enter contact number' });
 				Toast.show({
 					text: 'Please enter contact number',
@@ -280,7 +342,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (!Regex.validateMobileWithEleventDigit(currentcompanycontact)) {
+			if (!Regex.validateMobileWithEleventDigit(current_emp_contact)) {
 				this.setState({ currentcompanycontacterror: 'Please enter a valid contact number' });
 				Toast.show({
 					text: 'Please enter a valid contact number',
@@ -290,8 +352,8 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (!currentcompanydoc.hasOwnProperty('uri')) {
-				this.setState({ uploadEvidanceError: 'Please attach one document' });
+			if (!current_emp_cert) {
+				this.setState({ uploadCurrentCompanyEvidanceError: 'Please attach one document' });
 				Toast.show({
 					text: 'Please attach one document',
 					buttonText: 'Okay',
@@ -301,7 +363,7 @@ class EditStructureprofile extends Component {
 			}
 		}
 		else {
-			if (lastemployername.length == 0) {
+			if (last_employer_name.length == 0) {
 				this.setState({ lastemployernameerror: 'Please enter Employer Name' });
 				Toast.show({
 					text: 'Please enter Employer Name',
@@ -311,7 +373,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (lastemployername.length > 0 && !Regex.validateString(lastemployername)) {
+			if (last_employer_name.length > 0 && !Regex.validateString(last_employer_name)) {
 				this.setState({ lastemployernameerror: 'Please enter a valid Employer Name' });
 				Toast.show({
 					text: 'Please enter a valid Employer Name',
@@ -321,7 +383,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (lastemployercontact.length == 0) {
+			if (last_employer_contact.length == 0) {
 				this.setState({ lastemployercontacterror: 'Please enter contact number' });
 				Toast.show({
 					text: 'Please enter contact number',
@@ -330,7 +392,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (!Regex.validateMobileWithEleventDigit(lastemployercontact)) {
+			if (!Regex.validateMobileWithEleventDigit(last_employer_contact)) {
 				this.setState({ lastemployercontacterror: 'Please enter a valid contact number' });
 				Toast.show({
 					text: 'Please enter a valid contact number',
@@ -340,7 +402,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (!lastemployerdetails.hasOwnProperty('uri')) {
+			if (!last_employer_doc) {
 				this.setState({ lastemployerdetailsError: 'Please attach one document' });
 				Toast.show({
 					text: 'Please attach one document',
@@ -351,7 +413,7 @@ class EditStructureprofile extends Component {
 			}
 		}
 
-		if (!lastappraisal) {
+		if (!last_appraisal_date) {
 			this.setState({ lastappraisalerror: 'Please select your Last Appraisel' });
 
 			Toast.show({
@@ -363,7 +425,7 @@ class EditStructureprofile extends Component {
 		}
 
 		console.log('last_appraisal_evidence', last_appraisal_evidence)
-		if (!last_appraisal_evidence.hasOwnProperty('uri')) {
+		if (!last_appraisal_evidence) {
 			this.setState({ lastappraisaldocerror: 'Please attach one document' });
 			Toast.show({
 				text: 'Please attach one document',
@@ -373,7 +435,7 @@ class EditStructureprofile extends Component {
 			return;
 		}
 
-		if (!eppdoc.hasOwnProperty('uri')) {
+		if (!occupational_health_doc) {
 			this.setState({ eppdocError: 'Please attach one document' });
 			Toast.show({
 				text: 'Please attach one document',
@@ -381,16 +443,17 @@ class EditStructureprofile extends Component {
 				type: 'danger',
 			});
 			return;
-		}
-		if (traningdocs.length == 0) {
-			this.setState({ traningdocsError: 'Please attach one document' });
-			Toast.show({
-				text: 'Please attach one document',
-				buttonText: 'Okay',
-				type: 'danger',
-			});
-			return;
-		}
+		}  
+		//pending
+		// if (traningdocs.length == 0) { 
+		// 	this.setState({ traningdocsError: 'Please attach one document' });
+		// 	Toast.show({
+		// 		text: 'Please attach one document',
+		// 		buttonText: 'Okay',
+		// 		type: 'danger',
+		// 	});
+		// 	return;
+		// }
 
 		if (dbscheckdetail === null) {
 			this.setState({ dbserror: 'Please verify dbs check details' });
@@ -433,7 +496,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (contact1.length == 0) {
+			if (phone_number1.length == 0) {
 				this.setState({ contact1error: 'Please enter Referee1 contact number' });
 				Toast.show({
 					text: 'Please enter Referee1 contact number',
@@ -442,7 +505,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (!Regex.validateMobileWithEleventDigit(contact1)) {
+			if (!Regex.validateMobileWithEleventDigit(phone_number1)) {
 				this.setState({ contact1error: 'Please enter a valid  Referee1 contact number' });
 				Toast.show({
 					text: 'Please enter a valid  Referee1 contact number',
@@ -509,7 +572,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 		}
-
+		
 		if (referees2) {
 
 			if (name2.length == 0) {
@@ -532,7 +595,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (contact2.length == 0) {
+			if (phone_number2.length == 0) {
 				this.setState({ contact2error: 'Please enter Referee2 contact number' });
 				Toast.show({
 					text: 'Please enter Referee2 contact number',
@@ -541,7 +604,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (!Regex.validateMobileWithEleventDigit(contact2)) {
+			if (!Regex.validateMobileWithEleventDigit(phone_number2)) {
 				this.setState({ contact2error: 'Please enter a valid  Referee2 contact number' });
 				Toast.show({
 					text: 'Please enter a valid  Referee2 contact number',
@@ -631,7 +694,7 @@ class EditStructureprofile extends Component {
 				return;
 			}
 
-			if (contact3.length == 0) {
+			if (phone_number3.length == 0) {
 				this.setState({ contact3error: 'Please enter Referee3 contact number' });
 				Toast.show({
 					text: 'Please enter Referee3 contact number',
@@ -640,7 +703,7 @@ class EditStructureprofile extends Component {
 				});
 				return;
 			}
-			if (!Regex.validateMobileWithEleventDigit(contact3)) {
+			if (!Regex.validateMobileWithEleventDigit(phone_number3)) {
 				this.setState({ contact3error: 'Please enter a valid  Referee3 contact number' });
 				Toast.show({
 					text: 'Please enter a valid  Referee3 contact number',
@@ -748,7 +811,7 @@ class EditStructureprofile extends Component {
 			return;
 		}
 
-		if (question1 === null) {
+		if (q1 === null) {
 			this.setState({ question1error: 'Please answer the question' });
 			Toast.show({
 				text: 'Please answer the question',
@@ -758,7 +821,7 @@ class EditStructureprofile extends Component {
 			return;
 		}
 
-		if (question2 === null) {
+		if (q2 === null) {
 			this.setState({ question2error: 'Please answer the question' });
 			Toast.show({
 				text: 'Please answer the question',
@@ -772,39 +835,42 @@ class EditStructureprofile extends Component {
 		let qualificationslist = [];
 
 		formdata.append('user_id', this.props.userid);
-		console.log("this.props", this.props)
 		formdata.append('api_token', this.props.token);
 		// formdata.append('qualicompletedyear', qualicompletedyear);
 		// formdata.append('qualification_id', qualification.id);
 		// formdata.append('qualification_doc', qualification_doc);
-		formdata.append('full_time', this.props.isCurrentWorking ? 1 : 2);
+		formdata.append('full_time', full_time ? 1 : 2);
 
-		if (this.props.isCurrentWorking) {
+		if (full_time) {
 
-			formdata.append('current_emp', currentcompanyname);
-			formdata.append('current_emp_contact', currentcompanycontact);
-			if (currentcompanydoc.hasOwnProperty('uri')) {
-				formdata.append('current_company_doc', currentcompanydoc);
+			formdata.append('current_emp', current_emp);
+			formdata.append('current_emp_contact', current_emp_contact);
+			console.log('current_emp_certAgain',current_emp_certAgain)
+			if (current_emp_certAgain.hasOwnProperty('uri')) {
+				formdata.append('current_company_doc', current_emp_certAgain);
 			}
 		} else {
-			formdata.append('last_employer_name', lastemployername);
-			formdata.append('last_employer_contact', lastemployercontact);
-			if (lastemployerdetails.hasOwnProperty('uri')) {
-				formdata.append('last_employer_doc', lastemployerdetails);
+			formdata.append('last_employer_name', last_employer_name);
+			formdata.append('last_employer_contact', last_employer_contact);
+			if (last_employer_docAgain.hasOwnProperty('uri')) {
+				formdata.append('last_employer_doc', last_employer_docAgain);
 			}
 		}
-		formdata.append('last_appraisal_date', lastappraisal);
+		formdata.append('last_appraisal_date', last_appraisal_date);
 
-		if (last_appraisal_evidence.hasOwnProperty('uri')) {
-			formdata.append('last_appraisal_evidence', last_appraisal_evidence);
+		if (last_appraisal_evidenceAgain.hasOwnProperty('uri')) {
+			formdata.append('last_appraisal_evidence', last_appraisal_evidenceAgain);
 		}
 
-		if (eppdoc.hasOwnProperty('uri')) {
-			formdata.append('occupational_health_doc', eppdoc);
+		if (occupational_health_doc_Again.hasOwnProperty('uri')) {
+			formdata.append('occupational_health_doc', occupational_health_doc_Again);
 		}
 		let qualidocsDummy = [];
+		console.log("qualicompletedyear",qualicompletedyear,)
 		// qualidocs.push({qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc})
-		qualidocsDummy = [...qualidocs, { qualification: qualification.id == '1' ? 'MBBS' : 'Others', yearofcompletion: qualicompletedyear, cert: qualification_doc }]
+		qualidocsDummy = [{ qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
+
+		// qualidocsDummy = [...qualidocs, { qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
 		console.log('qualidocs', qualidocsDummy)
 		// formdata.append(qualification.id == '1' ? 'MBBS' : 'Others', {qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc});
 		formdata.append('qualificationarray', JSON.stringify(qualidocsDummy));
@@ -815,15 +881,15 @@ class EditStructureprofile extends Component {
 				formdata.append(item.qualification, item.cert);
 			});
 		}
-		formdata.append('traningdocs', JSON.stringify(traningdocs));
-		console.log('traningdocs', traningdocs)
-		if (traningdocs.length > 0) {
-			traningdocs.map(item => {
-				formdata.append(item.id, item.value);
-			});
-		}
+		// formdata.append('traningdocs', JSON.stringify(traningdocs));
+		// console.log('traningdocs', traningdocs)
+		// if (traningdocs.length > 0) {
+		// 	traningdocs.map(item => {
+		// 		formdata.append(item.id, item.value);
+		// 	});
+		// }
 
-		formdata.append('dbs_check', dbscheckdetail);
+		formdata.append('dbs_check', dbs_check);
 		let refressdata = [];
 		if (referees1) {
 			refressdata.push({
@@ -861,27 +927,23 @@ class EditStructureprofile extends Component {
 		console.log('refressdata', refressdata)
 		formdata.append('Refrees', JSON.stringify(refressdata));
 
-		formdata.append('q1', question1);
-		formdata.append('q2', question2);
+		formdata.append('q1', q1);
+		formdata.append('q2', q2);
 		formdata.append('is_negotiable', is_negotiable);
-		console.log(JSON.stringify(formdata), 'formdtata====<>');
+		console.log(formdata, 'formdtata====<>');
 		context.setState({ visible: true });
 		//	apis/saveStructuralData
 
 		RestClient.imageUpload('/apis/saveStructuralData', {}, formdata).then(response => {
 			context.setState({ visible: false });
-			console.log(response, 'resposne');
+			console.log('resposneresposneresposneresposneresposne',response);
 			if (response.status === 200) {
 				toast({ text: response.message });
-				navigate('SignupupFormfive');
-				context.props.tabUpdate({ value: 4 });
 			} else if (response.status === 401) {
-				this.props.reset();
 				toast({ text: response.message });
-				resetNavigationTo('auth', navigation);
 			}
 		}).catch((error) => {
-			console.log(error)
+			console.log("errorerrrororororo",error)
 			context.setState({ visible: false });
 		});
 
@@ -891,6 +953,7 @@ class EditStructureprofile extends Component {
 	_handleFocusNextField = nextField => {
 		this.refs[nextField].focus();
 	};
+	
 
 	render() {
 		let context = this;
@@ -930,9 +993,14 @@ class EditStructureprofile extends Component {
 			designation3,
 			referees1,
 			referees2,
-			referees3
+			referees3,
+			address1,
+			address2,
+			address3,
+			q1,
+			q2
 		} = this.state;
-		console.log('salarysalarysalarysalarysalary', dbs_check)
+		console.log('salarysalarysalarysalarysalary', referees1,referees3,referees2)
 		return (
 			<View style={{ flex: 1, backgroundColor: '#fff' }}>
 				<KeyboardAwareScrollView
@@ -998,11 +1066,9 @@ class EditStructureprofile extends Component {
 								},
 							]}
 							onChangeText={(value, index) => {
-								// SignupUpdate({
-								// 	prop: 'qualification',
-								// 	value: { value: value, id: qualificationlist[index].id },
-								// });
-								this.setState({})
+								console.log(value,index)
+								this.setState({mainQualification: value
+								})
 							}}
 						/>
 
@@ -1010,11 +1076,9 @@ class EditStructureprofile extends Component {
 							<Text style={{ opacity: 0.7 }}>Year of completion</Text>
 							<DatePickerComponent
 								dob={this.state.qualicompletedyear}
-								onDateChange={date =>
-									SignupUpdate({
-										prop: 'qualicompletedyear',
-										value: date,
-									})
+								onDateChange={date =>{
+									context.setState({qualicompletedyear : date})
+								}
 								}
 							/>
 							<Text
@@ -1030,11 +1094,9 @@ class EditStructureprofile extends Component {
 						<Accordion Header="Upload evidence">
 							<DocumentUploader
 								docurl={Qualifications + mainQualCert}
-								documentSelected={res => { }
-									// SignupUpdate({
-									// 	prop: 'qualification_doc',
-									// 	value: res,
-									// })
+								documentSelected={res => { 
+									mainQualCertAgain : res
+								}
 								}
 							/>
 						</Accordion>
@@ -1138,7 +1200,8 @@ class EditStructureprofile extends Component {
 								<DocumentUploader
 									docurl={certificates + current_emp_cert}
 									documentSelected={res => {
-										context.setState({ current_emp_cert: res })
+										console.log('itsssssss working')
+										context.setState({ current_emp_certAgain: res })
 									}
 									}
 								/>
@@ -1150,7 +1213,7 @@ class EditStructureprofile extends Component {
 									marginVertical: verticalScale(2),
 								}}
 							>
-								{this.state.uploadEvidanceError}
+								{this.state.uploadCurrentCompanyEvidanceError}
 							</Text>
 
 						</View>
@@ -1224,12 +1287,9 @@ class EditStructureprofile extends Component {
 								{!full_time ? <View><Accordion Header="Upload evidence">
 									<DocumentUploader
 
-										docurl={certificates + last_employer_doc}
+										docurl={last_employer_doc  ? certificates + last_employer_doc : ''}
 										documentSelected={res =>
-											SignupUpdate({
-												prop: 'lastemployerdetails',
-												value: res,
-											})
+											context.setState({last_employer_docAgain : res})
 										}
 									/>
 								</Accordion></View> : null}
@@ -1276,7 +1336,9 @@ class EditStructureprofile extends Component {
 						<Accordion Header="Last Appraisal Evidence">
 							<DocumentUploader
 								docurl={certificates + last_appraisal_evidence}
-								documentSelected={res => SignupUpdate({ prop: 'last_appraisal_evidence', value: res })} />
+								documentSelected={res => 
+								context.setState({last_appraisal_evidenceAgain: res})	
+								} />
 						</Accordion>
 
 						<Text
@@ -1292,7 +1354,9 @@ class EditStructureprofile extends Component {
 						<Accordion Header="Occupational Health Screen for EPP">
 							<DocumentUploader
 								docurl={certificates + occupational_health_doc}
-								documentSelected={res => SignupUpdate({ prop: 'eppdoc', value: res })} />
+								documentSelected={res => 
+									context.setState({occupational_health_doc_Again: res})
+							} />
 						</Accordion>
 						<Text
 							style={{
@@ -1329,19 +1393,24 @@ class EditStructureprofile extends Component {
 									flexDirection: 'row',
 									paddingBottom: 20,
 								}}
-							>
-								{trainingcourses.map(item => {
+							>  
+								{trainingcourses.map((item , i ) => {
+									let index = i+1;
+								  	console.log('trainingcourses' )
 									return (
 										<Accordion Header={item.name}>
 											<DocumentUploader
-												documentSelected={res =>
-													SignupUpdate({
-														prop: 'traningdocs',
-														value: [
-															...this.props.traningdocs,
-															{ c_name: item.name, id: item.id, value: res },
-														],
-													})
+											    docurl={this.state['traingDocUrl'+index]!= '' && this.state['traingDocUrl'+index] !== undefined && this.state['traingDocUrl'+index]._joinData && this.state['traingDocUrl'+index]._joinData.cert ? certificates + this.state['traingDocUrl'+index]._joinData.cert : '' }
+												documentSelected={res =>{
+													context.setState({['traingDoc'+index]: res })
+												}
+													// SignupUpdate({
+													// 	prop: 'traningdocs',
+													// 	value: [
+													// 		...this.props.traningdocs,
+													// 		{ c_name: item.name, id: item.id, value: res },
+													// 	],
+													// })
 												}
 											/>
 										</Accordion>
@@ -1582,10 +1651,8 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'name1',
-										value: text,
-									});
+									context.setState({name1: text})
+								
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'currentcompanycontact1')}
 								returnKeyType="next"
@@ -1627,10 +1694,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'email1',
-										value: text,
-									});
+									context.setState({email1: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'designation1')}
 								returnKeyType="next"
@@ -1650,10 +1714,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'designation1',
-										value: text,
-									});
+									context.setState({designation1: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'address1')}
 								returnKeyType="next"
@@ -1673,10 +1734,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'address1',
-										value: text,
-									});
+									context.setState({address1: text})
 								}}
 								//onSubmitEditing={this._handleFocusNextField.bind(this, 'Surname')}
 								returnKeyType="next"
@@ -1698,7 +1756,7 @@ class EditStructureprofile extends Component {
 						</View>
 					</View>}
 
-					{this.props.referees2 && <View style={{ flex: 0.5, marginHorizontal: scale(10) }}>
+					{referees2 && <View style={{ flex: 0.5, marginHorizontal: scale(10) }}>
 						<View
 							style={{
 								flex: 0.2,
@@ -1728,10 +1786,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'name2',
-										value: text,
-									});
+									context.setState({name2: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'currentcompanycontact2')}
 								returnKeyType="next"
@@ -1770,10 +1825,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'email2',
-										value: text,
-									});
+									context.setState({email2: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'designation2')}
 								returnKeyType="next"
@@ -1793,10 +1845,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'designation2',
-										value: text,
-									});
+									context.setState({designation2: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'address2')}
 								returnKeyType="next"
@@ -1816,10 +1865,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'address2',
-										value: text,
-									});
+									context.setState({address2: text})
 								}}
 								//onSubmitEditing={this._handleFocusNextField.bind(this, 'Surname')}
 								returnKeyType="next"
@@ -1840,7 +1886,7 @@ class EditStructureprofile extends Component {
 
 						</View>
 					</View>}
-					{this.props.referees3 && <View style={{ flex: 0.5, marginHorizontal: scale(10) }}>
+					{referees3 && <View style={{ flex: 0.5, marginHorizontal: scale(10) }}>
 						<View
 							style={{
 								flex: 0.2,
@@ -1870,10 +1916,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'name3',
-										value: text,
-									});
+									context.setState({name3: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'currentcompanycontact3')}
 								returnKeyType="next"
@@ -1912,10 +1955,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'email3',
-										value: text,
-									});
+									context.setState({email3: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'designation3')}
 								returnKeyType="next"
@@ -1935,10 +1975,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'designation3',
-										value: text,
-									});
+									context.setState({designation3: text})
 								}}
 								onSubmitEditing={this._handleFocusNextField.bind(this, 'address3')}
 								returnKeyType="next"
@@ -1958,10 +1995,7 @@ class EditStructureprofile extends Component {
 								enablesReturnKeyAutomatically={true}
 								onFocus={this.onFocus}
 								onChangeText={text => {
-									SignupUpdate({
-										prop: 'address3',
-										value: text,
-									});
+									context.setState({address3: text})
 								}}
 								//onSubmitEditing={this._handleFocusNextField.bind(this, 'Surname')}
 								returnKeyType="next"
@@ -2002,13 +2036,13 @@ class EditStructureprofile extends Component {
 						</View>
 						<View style={{ flex: 0.8, flexDirection: 'row', marginTop: verticalScale(10) }}>
 							<Genderfield
-								selected={this.props.question1 === 1}
-								onPress={() => SignupUpdate({ prop: 'question1', value: 1 })}
+								selected={q1 === true}
+								onPress={() => context.setState({q1: true})}
 								label="Yes"
 							/>
 							<Genderfield
-								selected={this.props.question1 === 0}
-								onPress={() => SignupUpdate({ prop: 'question1', value: 0 })}
+								selected={q1 === false}
+								onPress={() => context.setState({q1: false})}
 								label="No"
 							/>
 						</View>
@@ -2039,13 +2073,13 @@ class EditStructureprofile extends Component {
 						</View>
 						<View style={{ flex: 0.8, flexDirection: 'row', marginTop: verticalScale(10) }}>
 							<Genderfield
-								selected={this.props.question2 === 1}
-								onPress={() => SignupUpdate({ prop: 'question2', value: 1 })}
+								selected={q2 === true}
+								onPress={() => context.setState({q2 : true})}
 								label="Yes"
 							/>
 							<Genderfield
-								selected={this.props.question2 === 0}
-								onPress={() => SignupUpdate({ prop: 'question2', value: 0 })}
+								selected={q2 === false}
+								onPress={() => context.setState({q2 : false})}
 								label="No"
 							/>
 						</View>
@@ -2059,10 +2093,42 @@ class EditStructureprofile extends Component {
 							{this.state.question2error}
 						</Text>
 					</View>
+					<View
+						style={{
+							flex: 0.2,
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						<Button
+							label={'EDIT'}
+							disabled={false}
+							onPress={this.editProfile}
+							styles={{
+								button: {
+									height: verticalScale(50),
+									width: width - 70,
+									alignItems: 'center',
+									justifyContent: 'center',
+									borderRadius: 5,
+									paddingLeft: 15,
+									paddingRight: 15,
+									borderRadius: 50,
+									marginVertical: verticalScale(40),
+								},
 
+								label: [
+									{
+										fontSize: normalize(16),
+										color: '#FFFFFF',
+										letterSpacing: 5,
+									},
+								],
+							}}
+						/>
+					</View>
 					<View style={{ width, height: 180 }} />
 				</KeyboardAwareScrollView>
-				<NextButton onPress={this.nextButton} />
 				{this.state.visible && (
 					<Modal
 						backdrop={false}
@@ -2096,10 +2162,10 @@ class EditStructureprofile extends Component {
 }
 
 const mapStateToProps = ({ SignupReducer, Loginreducer }) => {
-	const { userid, token } = Loginreducer;
+	const { userid, token,userdata } = Loginreducer;
 
 	return {
-		userid, token
+		userid, token,userdata
 	};
 };
 

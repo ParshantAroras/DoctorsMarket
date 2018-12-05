@@ -41,6 +41,7 @@ import JobRequestDetail from './screens/jobRequestDetail';
 import SignupupFormfive from './screens/auth/SignupFormfive';
 import SignupFormStrucProfile from './screens/auth/SignupFormStrucProfile';
 import AddmoreQualification from './screens/auth/Addmorequalification';
+import EditMoreQualification from './screens/profile/EditMoreQualification'
 import SignupFormtwo from './screens/auth/SignupFormtwo';
 import SignupFormthree from './screens/auth/SignupFormthree';
 import SignupupFormfour from './screens/auth/SignupFormfour';
@@ -504,6 +505,15 @@ export default (routes = {
 			headerStyle: globalStyles.headerWithoutShadow,
 			headerTintColor: '#37a6ff',
 			title: 'Edit Availabilty screen',
+			tabBarVisible: false,
+		},
+	},
+	EditMoreQualification: {
+		screen: EditMoreQualification,
+		navigationOptions: {
+			headerStyle: globalStyles.headerWithoutShadow,
+			headerTintColor: '#B2B2B2',
+			title: 'Add more',
 			tabBarVisible: false,
 		},
 	},
