@@ -491,7 +491,7 @@ class SignupFormthree extends Component {
 								<View style={{ marginLeft: 1 }}>
 									<Accordion Header="Occupational Health Screen for EPP">
 										<DocumentUploader
-											docurl={this.props.profdoc}
+											// docurl={this.props.profdoc}
 											documentSelected={response =>{
 												console.log('response',response)
 												SignupUpdate({ prop: 'profdoc', value: response })

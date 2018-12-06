@@ -98,7 +98,7 @@ class AppNavigation extends Component {
 			console.log('userdata.doctor', userdata.doctor)
 			//return 'Signuptwo';
 			if (userdata.doctor === null) return 'auth';
-			if (userdata.doctor.profile_tab === 5 || userdata.doctor.profile_tab === 6 || userdata.doctor.profile_tab === '5' || userdata.doctor.profile_tab === '6' ||  userdata.doctor.complete_profile) return 'Main';
+			if (userdata.doctor.profile_tab === 5 || userdata.doctor.profile_tab === 6 || userdata.doctor.profile_tab === '5' || userdata.doctor.profile_tab === '6' ||  Number(userdata.doctor.complete_profile)) return 'Main';
 
 			if (userdata.doctor.profile_tab === 1 || userdata.doctor.profile_tab === '1') { return 'Signuptwo'; }
 			if (userdata.doctor.profile_tab === 2 || userdata.doctor.profile_tab === '2') {
