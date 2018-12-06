@@ -54,7 +54,7 @@ const qualificationlist = [
 	},
 	{
 		id: '2',
-		value: 'Others',
+		value: 'Other',
 	},
 ];
 
@@ -835,7 +835,7 @@ class SignupupFormStrucProfile extends Component {
 		}
 		let qualidocsDummy = [];
 		// qualidocs.push({qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc})
-	     qualidocsDummy = [...qualidocs,{qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc}] 
+	     qualidocsDummy = [...qualidocs,{qualification: qualification.id == '1' ? 'MBBS' : 'Other',yearofcompletion: qualicompletedyear,cert : qualification_doc}] 
 	     console.log('qualidocs',qualidocsDummy)
 		// formdata.append(qualification.id == '1' ? 'MBBS' : 'Others', {qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc});
 		formdata.append('qualificationarray', JSON.stringify(qualidocsDummy));

@@ -56,7 +56,7 @@ const qualificationlist = [
 	},
 	{
 		id: '2',
-		value: 'Others',
+		value: 'Other',
 	},
 ];
 
@@ -64,12 +64,12 @@ class EditStructureprofile extends Component {
 	constructor(props) {
 		super(props);
 		console.log('datadtadtadat', this.props.navigation.state.params)
-		let { Qualifications, certificates, doctor: { courses, candidates_qualifications, full_time, last_appraisal_date, last_appraisal_evidence, occupational_health_doc, salary, is_negotiable, dbs_check, candidates_referees, q1, q2 } } = this.props.navigation.state.params.profileData;
+		let { Qualifications, certificates, doctor: {candidates_last_emps, courses, candidates_qualifications, full_time, last_appraisal_date, last_appraisal_evidence, occupational_health_doc, salary, is_negotiable, dbs_check, candidates_referees, q1, q2 } } = this.props.navigation.state.params.profileData;
 		let candidateArray, candidateArray2, stateData = {};
 		console.log('candidates_referees', candidates_referees)
 		candidateArray = candidates_qualifications.find(item => item['name'] === "MBBS");
 		if (candidateArray == undefined) {
-			candidateArray2 = candidates_qualifications.find(item => item['name'] === "Others");
+			candidateArray2 = candidates_qualifications.find(item => item['name'] === "Other");
 		}
 		if (candidateArray) {
 			stateData = {
@@ -99,7 +99,9 @@ class EditStructureprofile extends Component {
 			yearofcompletion3: '',
 			cert3Url: '',
 		}
+		console.log('candidates_qualifications',candidates_qualifications)
 		candidates_qualifications.map((item, i) => {
+			console.log('item.name === "Other" && (!stateData.mainQualification === "Other")')
 			if (item.name === "MBBS" && (!stateData.mainQualification === "MBBS")) {
 				stateData = {
 					...stateData,
@@ -107,10 +109,10 @@ class EditStructureprofile extends Component {
 					yearofcompletion1: moment(item.yearofcompletion).format('YYYY-MM-DD'),
 					cert1Url: item.cert,
 				}
-			} else if (item.name === "Other2" && (!stateData.mainQualification === "Others")) {
+			} else if (item.name === "Other") {
 				stateData = {
 					...stateData,
-					qualification3: 'Others2',
+					qualification3: 'Other',
 					yearofcompletion3: item.cert,
 					yearofcompletion3: moment(item.yearofcompletion).format('YYYY-MM-DD'),
 					cert3Url: item.cert,
@@ -125,6 +127,7 @@ class EditStructureprofile extends Component {
 				}
 			}
 		})
+		console.log('stateDatastateDatastateData',stateData)
 
 		if (Number(full_time) === 1) {
 			let { doctor: { current_emp, current_emp_cert, current_emp_contact } } = this.props.navigation.state.params.profileData;
@@ -144,9 +147,9 @@ class EditStructureprofile extends Component {
 				current_emp: '',
 				current_emp_cert: '',
 				current_emp_contact: '',
-				last_employer_name,
-				last_employer_contact,
-				last_employer_doc,
+				last_employer_name : candidates_last_emps[0].emp_name,
+				last_employer_contact : candidates_last_emps[0].contact_number,
+				last_employer_doc : candidates_last_emps[0].cert,
 			}
 		}
 
@@ -942,11 +945,7 @@ class EditStructureprofile extends Component {
 		console.log("qualicompletedyear", qualicompletedyear,mainQualCertAgain)
 		// qualidocs.push({qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc})
 		
-		if(mainQualCertAgain.hasOwnProperty('uri')){
-			qualidocsDummy = [{ qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
-		 }else{
-			qualidocsDummy = [{ qualification: mainQualification, yearofcompletion: qualicompletedyear }]
-		 }	
+	
 
 		// qualidocsDummy = [...qualidocs, { qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain }]
 		console.log('qualidocs', qualidocsDummy)
@@ -992,6 +991,13 @@ class EditStructureprofile extends Component {
 				})
 			}
 		}
+		if(mainQualCertAgain.hasOwnProperty('uri')){
+			 qualidocsDummy.push({ qualification: mainQualification, yearofcompletion: qualicompletedyear, cert: mainQualCertAgain })
+		 }else{
+			qualidocsDummy.push({ qualification: mainQualification, yearofcompletion: qualicompletedyear })
+		 }	
+
+
 		// formdata.append(qualification.id == '1' ? 'MBBS' : 'Others', {qualification: qualification.id == '1' ? 'MBBS' : 'Others',yearofcompletion: qualicompletedyear,cert : qualification_doc});
 		formdata.append('qualificationarray', JSON.stringify(qualidocsDummy));
 		formdata.append('salary', salary);
@@ -2352,8 +2358,8 @@ class EditStructureprofile extends Component {
 									<Text style={{ opacity: 0.7, marginBottom: 15 }}>Year of completion</Text>
 									<DatePickerComponent 
 									 disabled={disable}
-									dob={this.state.yearofcompletion2} 
-									onDateChange={date => this.setState({ yearofcompletion2: date })} />
+									dob={this.state.yearofcompletion1} 
+									onDateChange={date => this.setState({ yearofcompletion1: date })} />
 									<DocumentUploader
 									   disabled={disable}
 										styles={{ marginBottom: 10, height: verticalScale(120) }}
@@ -2361,7 +2367,7 @@ class EditStructureprofile extends Component {
 										documentSelected={res => {
 											this.setState({
 												qualification1: 'MBBS',
-												yearofcompletion1: this.state.yearofcompletion2,
+												yearofcompletion1: this.state.yearofcompletion1,
 												cert1: res,
 											})
 										}
@@ -2401,7 +2407,7 @@ class EditStructureprofile extends Component {
 									/>
 									<View style={{ width, height: 20 }} />
 								</Accordion>
-								<Accordion expanded Header="Other Qualification document">
+								{!(mainQualification === 'Other') && <Accordion expanded Header="Other Qualification document">
 									<Text style={{ opacity: 0.7, marginBottom: 15 }}>Year of completion</Text>
 									<DatePickerComponent
 									disabled={disable}
@@ -2412,7 +2418,7 @@ class EditStructureprofile extends Component {
 										docurl={cert3Url ? Qualifications + cert3Url : ''}
 										documentSelected={res => {
 											this.setState({
-												qualification3: 'Other2',
+												qualification3: 'Other',
 												yearofcompletion3: this.state.yearofcompletion3,
 												cert3: res,
 											})
@@ -2420,7 +2426,7 @@ class EditStructureprofile extends Component {
 										}
 									/>
 									<View style={{ width, height: 20 }} />
-								</Accordion>
+								</Accordion>}
 							</ScrollView>
 						</View>
 					</Modal>
