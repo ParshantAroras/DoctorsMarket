@@ -12,12 +12,12 @@ const localhost = '172.24.2.236',
 	staging = '34.211.31.84:8048',
 	live = 'doctorsmarket.co.uk';
 
-const running_url = localhost,
-	http_url = `http://${running_url}`,
+const running_url = live,
+	http_url = `https://${running_url}`,
 	socket_url = `ws://${running_url}/websocket`,
-	apiBase_url = `http://${running_url}/rest/v1/`,
-	staticPagesUrl = `http://${running_url}/`,
-	mediaBase_url = `http://${running_url}/img/frontend/Users/`;
+	apiBase_url = `https://${running_url}/rest/v1/`,
+	staticPagesUrl = `https://${running_url}/`,
+	mediaBase_url = `https://${running_url}/img/frontend/Users/`;
 	// mediaBase_url = `https://${running_url}/doctor-market/img/frontend/Users/`;
 
 
@@ -32,7 +32,7 @@ export default class Connection {
 
 	static getBaseUrl() {
 		let local = http_url + '/doctor-market';
-		return local;
+		return http_url;
 	}
 
 	static getMedia(_id,image) {

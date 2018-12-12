@@ -2130,7 +2130,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.doctorsmarket.dev;
 				PRODUCT_NAME = DoctorsMarket;
-				PROVISIONING_PROFILE = "e7340d2e-e938-4c5b-a008-57b628b36c17";
+				PROVISIONING_PROFILE = "6a6e6c48-4b2e-4f49-8419-d800de0ea30d";
 				PROVISIONING_PROFILE_SPECIFIER = doctorsmarket_dis_pro;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

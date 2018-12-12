@@ -60,7 +60,6 @@ class Professional extends Component {
 		console.log('profDetail', this.props.navigation.state.params.profileData)
 		let { certificates, doctor: { skills, countries, Grades: { id: gradeId, name: gradeName }, is_gmc, gmc_number, prof_reg_number, prof_reg_cert, right_to_work_in_uk, country } } = this.props.navigation.state.params.profileData;
 
-		const { } = this.props.navigation.state.params.profileData.doctor;
 
 		let itemData = [], itemData2 = [];
 		skills.map((item) => {
