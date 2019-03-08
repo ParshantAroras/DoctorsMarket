@@ -1,0 +1,48 @@
+Project : DoctorsMarket
+
+Bitbucket repo link : https://bitbucket.org/shimiljas/doctorsmarket/src/master/
+
+
+Credentials 
+
+Id : consultant@mygynaec.co.uk
+Password : Manchester1!
+
+android KeyStore Password
+STORE_FILE = my-release-key.keystore
+KEY_ALIAS = my-key-alias
+STORE_PASSWORD = smartdata
+KEY_PASSWORD = smartdata
+
+Task Done 
+
+login       ------------>done
+forgot                 -------------->done
+signup     --------------->done
+profile screen----------->done
+profeesional detail screen--->done
+structured profile ----->done
+APi integreation for (profile/profeesional)
+Fitness to practise screnn=---->done
+chating module integreation------->done
+invoice screen -------------->dome
+add availabilty--------->done
+edit availabilty--------.done
+profile eidt screnn(first milestoen)----Completed Changes are there as per new request
+change password---------->done
+chagne profile image------->done
+Push notifcation -------->done
+Puhs notifcation lisiting-------->done
+
+
+
+The attachment contains all certificates required for ios and android
+
+
+
+
+
+
+
+
+
